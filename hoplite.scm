@@ -11,7 +11,11 @@
 (define (piece symbol coords)
   (list symbol coords))
 
-(define player (piece "XXX" '(5 -2)))
+(define player (piece " P " '(5 -2)))
+(define enemy (piece " E " '(10 0)))
 
 (displayn 
-  (render-piece player empty-board board-with-coords))
+  (render-piece
+    player
+    (render-piece enemy empty-board board-with-coords)
+    board-with-coords))
