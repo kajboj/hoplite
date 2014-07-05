@@ -23,10 +23,41 @@
             \\___/A 0\\___/
                 \\___/")
 
-(define board 
-  (make-vector 11 
-    (make-vector 8 ())))
+(define (displayn s) (begin (display s) (newline)))
 
-(display board)
-(display board-template)
-(newline)
+(define (replace-first pattern new s)
+  (let* 
+    ((start-index (string-search-forward pattern s))
+     (end-index (+ start-index (string-length pattern))))
+    (string-append
+      (substring s 0 start-index)
+      new
+      (substring s end-index (string-length s)))))
+
+(define (render-int i)
+  (if (= i 10) "A" (number->string i)))
+
+(define (render-padded-int i)
+  (if (< i 0) 
+    (render-int i)
+    (string-append " " (render-int i))))
+
+(define (render-coords coords)
+  (string-append
+    (render-int (get-x coords))
+    (render-padded-int (get-y coords))))
+
+(define (get-x coords) (car coords))
+(define (get-y coords) (cadr coords))
+
+(define player '(5 -2))
+
+(displayn (render-coords '(3 -3)))
+(displayn (render-coords '(10 -1)))
+
+(displayn (replace-first "3 0" "XXX" board-template))
+
+; (displayn (render-coords '(5 -2)))
+; (displayn (render-coords '(0 10)))
+
+; (displayn board-template)
