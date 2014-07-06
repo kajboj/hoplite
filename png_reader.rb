@@ -66,13 +66,16 @@ def pixelize(image, ascii_board_dimensions, pixel_dimensions)
     f.write("(define screen '(")
 
     (0..ascii_board_dimensions.height-1).each do |ascii_row|
+      f.write("(")
       (0..ascii_board_dimensions.width-1).each do |ascii_col|
-        avg = nil
+        avg_color = nil
         each_pixel_of_ascii_tile(image, ascii_col, ascii_row, pixel_dimensions) do |col, row, avg|
-          avg = ChunkyPNG::Color.rgba(avg.r, avg.g, avg.b, 255)
-          png[col, row] = avg
+          avg_color = avg
+          png[col, row] = ChunkyPNG::Color.rgba(avg.r, avg.g, avg.b, 255)
         end
+        f.write("(#{avg_color.r} #{avg_color.g} #{avg_color.b}) ")
       end
+      f.write(")\n")
     end
 
     f.write("))")
