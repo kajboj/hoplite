@@ -24,18 +24,25 @@
 (define (coords-add coords1 coords2)
   (map + coords1 coords2))
 
-(define (neighbours coords)
+(define (neighbours radius coords)
   (map
     (lambda (x) (coords-add coords x))
-    (list '(-1 0) '(-1 1) '(0 1) '(1 0) '(1 -1) '(0 -1))))
+    (coord-shifts radius)))
+
+(define (coord-shifts radius)
+  (filter
+    (lambda (c)
+      (and
+       (>= radius (abs (+ (get-x c) (get-y c))))
+       (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
+    (pairs (- radius) radius (- radius) radius)))
 
 (define player (piece " P " '(5 0)))
 (define enemy (piece " E " '(10 0)))
 
 (displayn 
-  (render-piece
-    player
-    (render-piece enemy board-with-coords board-with-coords)
-    board-with-coords))
-
-(displayn (neighbours (get-coords player)))
+  (render-symbols " . "
+    (neighbours 2 (get-coords player))
+      (render-piece
+        player
+        (render-piece enemy empty-board))))

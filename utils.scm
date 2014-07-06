@@ -11,3 +11,13 @@
       (substring target 0 start-index)
       new
       (substring target end-index (string-length target)))))
+
+(define (pairs imin imax jmin jmax)
+  (begin
+    (define (inner-pairs i j)
+      (if (> i imax)
+        ()
+        (if (> j jmax)
+          (inner-pairs (+ i 1) jmin)
+          (cons (list i j) (inner-pairs i (+ j 1))))))
+    (inner-pairs imin jmin)))
