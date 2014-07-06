@@ -1,6 +1,8 @@
 (load "boards.scm")
 (load "utils.scm")
 (load "display.scm")
+(load "parse.scm")
+(load "screen.scm")
 
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
@@ -53,6 +55,8 @@
   (render-symbols " . "
     (neighbours 2 (get-coords footman))
       (render-world game-world empty-board)))
+
+(displayn (hex-coords-and-color screen))
 
 ; (displayn
 ;   (hoplite-move game-world))

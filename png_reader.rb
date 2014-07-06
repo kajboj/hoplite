@@ -63,7 +63,7 @@ end
 def pixelize(image, ascii_board_dimensions, pixel_dimensions)
   png = ChunkyPNG::Image.new(image.width, image.height, ChunkyPNG::Color.rgba(0, 255, 0, 255))
   scm = File.open('screen.scm', 'w') do |f|
-    f.write("(define screen '(")
+    f.write("(define screen '(\n")
 
     (0..ascii_board_dimensions.height-1).each do |ascii_row|
       f.write("(")
