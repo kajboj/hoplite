@@ -25,9 +25,10 @@
   (map + coords1 coords2))
 
 (define (neighbours radius coords)
-  (map
-    (lambda (x) (coords-add coords x))
-    (coord-shifts radius)))
+  (filter on-board?
+    (map
+      (lambda (x) (coords-add coords x))
+      (coord-shifts radius))))
 
 (define (coord-shifts radius)
   (filter
@@ -37,12 +38,12 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(define player (piece " P " '(5 0)))
-(define enemy (piece " E " '(10 0)))
+(define player (piece " P " '(10 0)))
+(define enemy (piece " E " '(5 0)))
 
 (displayn 
   (render-symbols " . "
-    (neighbours 2 (get-coords player))
+    (neighbours 2 (get-coords enemy))
       (render-piece
         player
         (render-piece enemy empty-board))))
