@@ -17,6 +17,13 @@
     (get-coords piece)
     board))
 
+(define (render-pieces pieces board)
+  (if (null? pieces)
+    board
+    (render-piece
+      (car pieces)
+      (render-pieces (cdr pieces) board))))
+
 (define (render-symbol symbol coords board)
   (replace-first-in-target
     (render-coords coords)
@@ -31,3 +38,8 @@
       symbol
       (car coords-list)
       (render-symbols symbol (cdr coords-list) board))))
+
+(define (render-world world board)
+  (render-pieces
+    (cons (get-hoplite world) (get-enemies world))
+    board))

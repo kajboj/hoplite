@@ -5,11 +5,17 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
+(define (piece symbol coords)
+  (list symbol coords))
+
 (define (get-symbol piece) (car piece))
 (define (get-coords piece) (cadr piece))
 
-(define (piece symbol coords)
-  (list symbol coords))
+(define (world hoplite enemies)
+  (list hoplite enemies))
+
+(define (get-hoplite world) (car world))
+(define (get-enemies world) (cadr world))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -38,12 +44,15 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(define player (piece " P " '(10 0)))
-(define enemy (piece " E " '(5 0)))
+(define hoplite (piece " H " '(10 0)))
+(define footman (piece " F " '(5 0)))
+(define enemies (list footman))
+(define game-world (world hoplite enemies))
 
 (displayn 
   (render-symbols " . "
-    (neighbours 2 (get-coords enemy))
-      (render-piece
-        player
-        (render-piece enemy empty-board))))
+    (neighbours 2 (get-coords footman))
+      (render-world game-world empty-board)))
+
+; (displayn
+;   (hoplite-move game-world))
