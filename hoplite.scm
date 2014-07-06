@@ -51,12 +51,12 @@
 (define enemies (list footman))
 (define game-world (world hoplite enemies))
 
-(displayn 
-  (render-symbols " . "
-    (neighbours 2 (get-coords footman))
-      (render-world game-world empty-board)))
+(displayn board-with-coords)
 
-(displayn (hex-coords-and-color screen))
+(displayn
+  (list-transform-negative
+    (hex-coords-and-color screen)
+    (lambda (color) (empty-tile? (cadr color)))))
 
 ; (displayn
 ;   (hoplite-move game-world))

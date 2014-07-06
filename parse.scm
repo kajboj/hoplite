@@ -4,6 +4,10 @@
 (define (col coords) (car coords))
 (define (row coords) (cadr coords))
 
+(define (red rgb) (car rgb))
+(define (green rgb) (cadr rgb))
+(define (blue rgb) (caddr rgb))
+
 (define (parse-coords s)
   (list
     (parse-int (substring s 0 1))
@@ -48,3 +52,24 @@
         (hex-coords (coords-add ascii-coords (list -1 -1)))
         (color screen ascii-coords)))
     (ascii-coords-of-Xs board-for-piece-recognition)))
+
+(define (number-within? tolerance x y)
+  (<= (abs (- x y)) tolerance))
+
+(define (color-within? tolerance c1 c2)
+  (and
+    (number-within? tolerance (red c1) (red c2))
+    (number-within? tolerance (green c1) (green c2))
+    (number-within? tolerance (blue c1) (blue c2))))
+
+(define (empty-tile? color)
+  (color-within? 5 color (list 66 66 66)))
+
+(define (hoplite-tile? color)
+  (color-within? 5 color (list 156 157 156)))
+
+(define (lava-tile? color)
+  (color-within? 5 color (list 69 29 29)))
+
+(define (footman-tile? color)
+  (color-within? 5 color (list 152 116 80)))
