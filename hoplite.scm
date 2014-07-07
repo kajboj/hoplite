@@ -17,7 +17,7 @@
   (lambda (coords) (piece " F " coords))))
 
 (define demolitionist-def (list
-  (list 159 82 82)
+  (list 142 76 77)
   (lambda (coords) (piece " D " coords))))
 
 (define hole-def (list
