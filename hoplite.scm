@@ -79,9 +79,8 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(displayn board-with-coords)
-
-(displayn (reject-empty-tiles (hex-coords-and-color screen)))
+; (displayn board-with-coords)
+; (displayn (reject-empty-tiles (hex-coords-and-color screen)))
 
 (displayn 
   (render-pieces 

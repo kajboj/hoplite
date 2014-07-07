@@ -76,7 +76,7 @@
       (list-transform-positive
         hex-coords-and-colors
         (lambda (hex-coords-and-color)
-          (color-within? 10
+          (color-within? 11
             (cadr hex-coords-and-color)
             (get-color piece-def)))))))
 
