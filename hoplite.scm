@@ -32,6 +32,10 @@
   (list 193 194 193)
   (lambda (coords) (piece "alt" coords))))
 
+(define wizard-def (list
+  (list 147 81 114)
+  (lambda (coords) (piece " W " coords))))
+
 (define (get-color piece-def) (car piece-def))
 (define (get-creator piece-def) (cadr piece-def))
 
@@ -85,5 +89,13 @@
 (displayn 
   (render-pieces 
     (parse-world screen
-      (list hoplite-def lava-def footman-def demolitionist-def hole-def archer-def altar-def))
+      (list
+        hoplite-def
+        lava-def
+        footman-def
+        demolitionist-def
+        hole-def
+        archer-def
+        altar-def
+        wizard-def))
     empty-board))

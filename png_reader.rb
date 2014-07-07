@@ -1,5 +1,4 @@
 require 'chunky_png'
-require 'pry'
 
 def load_ascii_board
   boards = File.read('boards.scm')
