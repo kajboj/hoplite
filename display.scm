@@ -40,6 +40,5 @@
       (render-symbols symbol (cdr coords-list) board))))
 
 (define (render-world world board)
-  (render-pieces
-    (cons (get-hoplite world) (get-enemies world))
+  (render-pieces (get-pieces world)
     board))

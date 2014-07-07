@@ -4,6 +4,37 @@
 (load "parse.scm")
 (load "screen.scm")
 
+(define hoplite-def (list
+  (list 156 157 156)
+  (lambda (coords) (piece "!H!" coords))))
+
+(define lava-def (list
+  (list 69 29 29)
+  (lambda (coords) (piece "~~~" coords))))
+
+(define footman-def (list
+  (list 152 116 80)
+  (lambda (coords) (piece " F " coords))))
+
+(define demolitionist-def (list
+  (list 159 82 82)
+  (lambda (coords) (piece " D " coords))))
+
+(define hole-def (list
+  (list 98 97 98)
+  (lambda (coords) (piece " # " coords))))
+
+(define archer-def (list
+  (list 116 153 80)
+  (lambda (coords) (piece " A " coords))))
+
+(define altar-def (list
+  (list 193 194 193)
+  (lambda (coords) (piece "alt" coords))))
+
+(define (get-color piece-def) (car piece-def))
+(define (get-creator piece-def) (cadr piece-def))
+
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
@@ -18,6 +49,8 @@
 
 (define (get-hoplite world) (car world))
 (define (get-enemies world) (cadr world))
+(define (get-pieces world)
+  (cons (get-hoplite world) (get-enemies world)))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -46,17 +79,12 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(define hoplite (piece " H " '(10 0)))
-(define footman (piece " F " '(5 0)))
-(define enemies (list footman))
-(define game-world (world hoplite enemies))
-
 (displayn board-with-coords)
 
-(displayn
-  (list-transform-negative
-    (hex-coords-and-color screen)
-    (lambda (color) (empty-tile? (cadr color)))))
+(displayn (reject-empty-tiles (hex-coords-and-color screen)))
 
-; (displayn
-;   (hoplite-move game-world))
+(displayn 
+  (render-pieces 
+    (parse-world screen
+      (list hoplite-def lava-def footman-def demolitionist-def hole-def archer-def altar-def))
+    empty-board))

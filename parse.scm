@@ -65,11 +65,30 @@
 (define (empty-tile? color)
   (color-within? 5 color (list 66 66 66)))
 
-(define (hoplite-tile? color)
-  (color-within? 5 color (list 156 157 156)))
+(define (reject-empty-tiles hex-coords-and-colors)
+  (list-transform-negative
+    hex-coords-and-colors
+    (lambda (color) (empty-tile? (cadr color)))))
 
-(define (lava-tile? color)
-  (color-within? 5 color (list 69 29 29)))
+(define (create-pieces piece-def hex-coords-and-colors)
+  (map (get-creator piece-def)
+    (map car
+      (list-transform-positive
+        hex-coords-and-colors
+        (lambda (hex-coords-and-color)
+          (color-within? 10
+            (cadr hex-coords-and-color)
+            (get-color piece-def)))))))
 
-(define (footman-tile? color)
-  (color-within? 5 color (list 152 116 80)))
+(define (parse-world screen piece-defs)
+  (let ((hex-coords-and-colors
+          (reject-empty-tiles (hex-coords-and-color screen))))
+    (fold-left 
+      (lambda (acc piece-def)
+        (append
+          acc
+          (create-pieces
+            piece-def
+            hex-coords-and-colors)))
+      (list)
+      piece-defs)))
