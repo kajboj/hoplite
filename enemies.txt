@@ -1,3 +1,0 @@
-Footman
-  attack adjacent tiles
-  always moves towards player
