@@ -8,3 +8,14 @@ puts output
 col, row = 600, 550
 
 `./adb shell input tap #{col} #{row}`
+
+
+
+# image = Image.from_android
+# cropped = image.crop(x, y, width, height)
+# pixelized = image.pixelize
+# pixelized.to_scheme_rgb
+# tap_point = Ai.new.next_move
+# tap_coords = cropped.to_pixels(tap_point)
+# tap_coords = tap_coords.add(0, y)
+# Android.tap(tap_coords)
