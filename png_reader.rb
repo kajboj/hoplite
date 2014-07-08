@@ -1,5 +1,7 @@
 require 'chunky_png'
 
+PNG_DIR = 'png'
+
 def load_ascii_board
   boards = File.read('boards.scm')
   empty_board = boards.scan(/define empty-board "(.*?)"/m).first.first
@@ -55,7 +57,7 @@ def crop(image, minrow, maxrow)
     end
   end
 
-  png.save('cropped.png')
+  png.save(File.join(PNG_DIR, 'cropped.png'))
   png
 end
 
@@ -80,7 +82,7 @@ def pixelize(image, ascii_board_dimensions, pixel_dimensions)
     f.write("))")
   end
 
-  png.save('pixelated.png')
+  png.save(File.join(PNG_DIR, 'pixelated.png'))
 end
 
 def each_pixel_of_ascii_tile(image, ascii_col, ascii_row, pixel_dimensions)
@@ -108,7 +110,7 @@ def avg_rect(image, mincol, maxcol, minrow, maxrow)
   avg
 end
 
-input_filename = 'screen.png'
+input_filename = File.join(PNG_DIR, 'screen.png')
 
 `convert -resize 25% #{input_filename} screen-small.png`
 
