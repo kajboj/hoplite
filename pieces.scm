@@ -29,3 +29,13 @@
 (define wizard-def (list
   (list 147 81 114)
   (lambda (coords) (piece " W " coords))))
+
+(define piece-defs (list
+  hoplite-def
+  lava-def
+  footman-def
+  demolitionist-def
+  hole-def
+  archer-def
+  altar-def
+  wizard-def))

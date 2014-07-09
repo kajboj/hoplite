@@ -21,3 +21,6 @@
           (inner-pairs (+ i 1) jmin)
           (cons (list i j) (inner-pairs i (+ j 1))))))
     (inner-pairs imin jmin)))
+
+(define (list-sample x)
+  (list-ref x (random (length x))))

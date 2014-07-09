@@ -17,7 +17,9 @@
 (define (get-symbol piece) (car piece))
 (define (get-coords piece) (cadr piece))
 
-(define (world hoplite enemies)
+(define (hoplite? piece) (string=? "!H!" (get-symbol piece)))
+
+(define (game-world hoplite enemies)
   (list hoplite enemies))
 
 (define (get-hoplite world) (car world))
@@ -44,6 +46,20 @@
       (lambda (x) (coords-add coords x))
       (coord-shifts radius))))
 
+(define (coverage-checker-positive coords-list)
+  (lambda (coords)
+    (list-search-positive coords-list 
+      (lambda (other) (coords=? other coords)))))
+
+(define (coverage-checker-negative coords-list)
+  (let ((positive (coverage-checker-positive coords-list)))
+    (lambda (coords) (not (positive coords)))))
+
+(define (legal-moves hoplite world)
+  (filter
+    (coverage-checker-negative (map get-coords (get-enemies world)))
+    (neighbours 1 (get-coords hoplite))))
+
 (define (coord-shifts radius)
   (filter
     (lambda (c)
@@ -52,19 +68,12 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-; (displayn board-with-coords)
-; (displayn (reject-empty-tiles (hex-coords-and-color screen)))
+(define world (parse-world screen piece-defs))
+
+(displayn (render-world world empty-board))
 
 (displayn 
-  (render-pieces 
-    (parse-world screen
-      (list
-        hoplite-def
-        lava-def
-        footman-def
-        demolitionist-def
-        hole-def
-        archer-def
-        altar-def
-        wizard-def))
+  (render-symbols
+    " . "
+    (list (list-sample (legal-moves (get-hoplite world) world)))
     empty-board))

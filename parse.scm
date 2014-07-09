@@ -80,7 +80,7 @@
             (cadr hex-coords-and-color)
             (get-color piece-def)))))))
 
-(define (parse-world screen piece-defs)
+(define (parse-pieces screen piece-defs)
   (let ((hex-coords-and-colors
           (reject-empty-tiles (hex-coords-and-color screen))))
     (fold-left 
@@ -92,3 +92,9 @@
             hex-coords-and-colors)))
       (list)
       piece-defs)))
+
+(define (parse-world screen piece-defs)
+  (let ((pieces (parse-pieces screen piece-defs)))
+    (game-world
+      (car (list-transform-positive pieces hoplite?))
+      (list-transform-negative pieces hoplite?))))
