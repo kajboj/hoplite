@@ -42,3 +42,27 @@
 (define (render-world world board)
   (render-pieces (get-pieces world)
     board))
+
+(define (get-width dimensions) (car dimensions))
+(define (get-height dimensions) (cadr dimensions))
+
+(define (board-dimensions board)
+  (traverse-board board (list 0 0)
+    (lambda (chars acc coords)
+      (list
+        (max (get-x acc) (get-x coords))
+        (max (get-y acc) (get-y coords))))))
+
+(define (hex-to-ascii-coords hex)
+  (assoc hex (map
+    (lambda (ascii-coords)
+      (list (hex-coords ascii-coords) ascii-coords))
+    (ascii-coords-of-Xs board-for-piece-recognition))))
+
+(define (ascii-coords-to-proportions ascii-coords)
+  (let* ((dim (board-dimensions empty-board))
+         (width (car dim))
+         (height (cadr dim)))
+  (list
+    (/ (car ascii-coords) width)
+    (/ (cadr ascii-coords) height))))

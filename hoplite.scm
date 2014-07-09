@@ -68,12 +68,16 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(define world (parse-world screen piece-defs))
+(let* ((world (parse-world screen piece-defs))
+       (move (list-sample (legal-moves (get-hoplite world) world))))
+  (begin
+    (displayn 
+      (render-symbols
+        " . "
+        (list move) 
+        (render-world world board-with-coords))))
 
-(displayn (render-world world empty-board))
+    (displayn move)
+    (displayn (cadr (hex-to-ascii-coords move)))
 
-(displayn 
-  (render-symbols
-    " . "
-    (list (list-sample (legal-moves (get-hoplite world) world)))
-    empty-board))
+    (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))

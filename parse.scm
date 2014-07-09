@@ -16,7 +16,7 @@
 (define (parse-int s)
   (if (string=? s "A") 10 (string->number s)))
 
-(define (traverse-board board f)
+(define (traverse-board board initial f)
   (begin
     (define (inner chars col row acc)
       (if (null? chars)
@@ -24,21 +24,22 @@
         (if (char=? (car chars) #\newline)
           (inner (cdr chars) 0 (+ 1 row) acc)
           (inner (cdr chars) (+ 1 col) row (f chars acc (list col row))))))
-    (inner (string->list board) 0 0 (list))))
+    (inner (string->list board) 0 0 initial)))
 
 (define (ascii-coords-of-Xs board)
-  (traverse-board board 
+  (traverse-board board '()
     (lambda (chars acc coords)
       (if (char=? (car chars) #\X)
         (cons coords acc)
         acc))))
 
-(define (hex-coords ascii-coords)
-  (traverse-board board-with-coords
-    (lambda (chars acc coords)
-      (if (coords=? coords ascii-coords)
-        (parse-coords (list->string (sublist chars 0 3)))
-        acc))))
+(define (hex-coords ascii-coords-of-X)
+  (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))
+    (traverse-board board-with-coords '()
+      (lambda (chars acc coords)
+        (if (coords=? coords ascii-coords-of-hex)
+          (parse-coords (list->string (sublist chars 0 3)))
+          acc)))))
 
 (define (color screen ascii-coords)
   (list-ref
@@ -49,7 +50,7 @@
   (map
     (lambda (ascii-coords)
       (list
-        (hex-coords (coords-add ascii-coords (list -1 -1)))
+        (hex-coords ascii-coords)
         (color screen ascii-coords)))
     (ascii-coords-of-Xs board-for-piece-recognition)))
 
