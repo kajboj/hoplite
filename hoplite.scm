@@ -75,7 +75,7 @@
       (render-symbols
         " . "
         (list move) 
-        (render-world world board-with-coords))))
+        (render-world world empty-board))))
 
     (displayn move)
     (displayn (cadr (hex-to-ascii-coords move)))
