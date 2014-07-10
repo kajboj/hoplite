@@ -1,5 +1,7 @@
 require 'chunky_png'
 
+puts 'started'
+
 PNG_DIR = 'png'
 CROP = {top: 18, bottom: -101}
 TAP_CORRECTION = {row: -0.05}
@@ -143,8 +145,8 @@ end
 def parse_move(output)
   col_s, row_s = output.split("\n").last[1..-2].split
   [col_s, row_s].map do |ratio_s|
-    a = ratio_s.split("/").map(&:to_f)
-    a[0]/a[1]
+    a = ratio_s.split("/").compact.map(&:to_f)
+    a[1] ? a[0]/a[1] : a[0]
   end
 end
 

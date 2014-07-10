@@ -1,14 +1,22 @@
 adb = "/home/kajboj/code/adt/adt-bundle-linux-x86-20131030/sdk/platform-tools/adb"
 regex = 's/\x0D\x0A/\x0A/g'
-`#{adb} shell screencap -p | perl -pe '#{regex}' > png/screen.png`
-load 'png_reader.rb'
-output = `scheme --silent < hoplite.scm`
-puts output
 
-col, row = ratio_to_pixels(*parse_move(output))
-puts col, row
+while true do
+  puts 'getting image from android'
+  `#{adb} shell screencap -p | perl -pe '#{regex}' > png/screen.png`
+  puts 'processing image'
+  load 'png_reader.rb'
+  puts 'move calculation'
+  output = `scheme --silent < hoplite.scm`
+  puts output
 
-`#{adb} shell input tap #{col} #{row}`
+  col, row = ratio_to_pixels(*parse_move(output))
+  puts col, row
+
+  puts 'tapping'
+  `#{adb} shell input tap #{col} #{row}`
+  sleep 0.5
+end
 
 # image = Image.from_android
 # cropped = image.crop(x, y, width, height)
