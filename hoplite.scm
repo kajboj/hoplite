@@ -11,12 +11,6 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define (piece symbol coords)
-  (list symbol coords))
-
-(define (get-symbol piece) (car piece))
-(define (get-coords piece) (cadr piece))
-
 (define (hoplite? piece) (string=? "!H!" (get-symbol piece)))
 
 (define (game-world hoplite enemies)
@@ -40,16 +34,25 @@
 (define (coords-add coords1 coords2)
   (map + coords1 coords2))
 
-(define (neighbours radius coords)
+(define (coords-list-add coords-list coords)
+  (map
+    (lambda (x) (coords-add coords x))
+    coords-list))
+
+(define (shifted-on-board coords shifts)
   (filter on-board?
-    (map
-      (lambda (x) (coords-add coords x))
-      (coord-shifts radius))))
+    (coords-list-add shifts coords))))
+
+(define (neighbours radius coords)
+  (shifted-on-board coords (coord-shifts radius)))
+
+(define (coverage-check coords-list coords)
+  (list-search-positive coords-list 
+    (lambda (other) (coords=? other coords))))
 
 (define (coverage-checker-positive coords-list)
   (lambda (coords)
-    (list-search-positive coords-list 
-      (lambda (other) (coords=? other coords)))))
+    (coverage-check coords-list coords)))
 
 (define (coverage-checker-negative coords-list)
   (let ((positive (coverage-checker-positive coords-list)))
@@ -68,16 +71,37 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(let* ((world (parse-world screen piece-defs))
-       (move (list-sample (legal-moves (get-hoplite world) world))))
+(define (attack-count coords enemies)
+  (fold-left
+    (lambda (acc enemy)
+      (+ acc
+        (if (coverage-check (get-attack enemy) coords) 1 0)))
+    0
+    enemies))
+
+; (let* ((world (parse-world screen piece-defs))
+;        (move (list-sample (legal-moves (get-hoplite world) world))))
+;   (begin
+;     (displayn 
+;       (render-symbols
+;         " . "
+;         (list move) 
+;         (render-world world empty-board))))
+
+;     (displayn move)
+;     (displayn (cadr (hex-to-ascii-coords move)))
+
+;     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
+
+(let* ((footman ((get-creator archer-def) '(5 0)))
+       (world (game-world 
+         ((get-creator hoplite-def) '(10 0))
+         (list footman))))
   (begin
     (displayn 
       (render-symbols
         " . "
-        (list move) 
-        (render-world world empty-board))))
+        (get-attack footman)
+        (render-world world board-with-coords)))
 
-    (displayn move)
-    (displayn (cadr (hex-to-ascii-coords move)))
-
-    (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
+    (displayn (attack-count '(7 0) (get-enemies world)))))

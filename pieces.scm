@@ -1,3 +1,13 @@
+(define (piece symbol coords)
+  (list symbol coords))
+
+(define (enemy symbol coords attack)
+  (list symbol coords attack))
+
+(define (get-symbol piece) (car piece))
+(define (get-coords piece) (cadr piece))
+(define (get-attack enemy) (caddr enemy))
+
 (define hoplite-def (list
   (list 156 157 156)
   (lambda (coords) (piece "!H!" coords))))
@@ -8,7 +18,9 @@
 
 (define footman-def (list
   (list 152 116 80)
-  (lambda (coords) (piece " F " coords))))
+  (lambda (coords)
+    (enemy " F "coords
+      (neighbours 1 coords)))))
 
 (define demolitionist-def (list
   (list 142 76 77)
@@ -20,7 +32,17 @@
 
 (define archer-def (list
   (list 116 153 80)
-  (lambda (coords) (piece " A " coords))))
+  (lambda (coords)
+    (enemy " A "coords
+      (shifted-on-board coords
+          (list
+            '(-5  0) '(-4  0) '(-3  0) '(-2  0)
+            '( 5  0) '( 4  0) '( 3  0) '( 2  0)
+            '( 0 -5) '( 0 -4) '( 0 -3) '( 0 -2)
+            '( 0  5) '( 0  4) '( 0  3) '( 0  2)
+            '( 5 -5) '( 4 -4) '( 3 -3) '( 2 -2)
+            '(-5  5) '(-4  4) '(-3  3) '(-2  2)
+            ))))))
 
 (define altar-def (list
   (list 193 194 193)
