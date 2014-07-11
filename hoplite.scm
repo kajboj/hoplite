@@ -4,6 +4,7 @@
 (load "display.scm")
 (load "parse.scm")
 (load "screen.scm")
+(load "ai.scm")
 
 (define (get-color piece-def) (car piece-def))
 (define (get-creator piece-def) (cadr piece-def))
@@ -71,37 +72,34 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(define (attack-count coords enemies)
-  (fold-left
-    (lambda (acc enemy)
-      (+ acc
-        (if (coverage-check (get-attack enemy) coords) 1 0)))
-    0
-    enemies))
-
-; (let* ((world (parse-world screen piece-defs))
-;        (move (list-sample (legal-moves (get-hoplite world) world))))
-;   (begin
-;     (displayn 
-;       (render-symbols
-;         " . "
-;         (list move) 
-;         (render-world world empty-board))))
-
-;     (displayn move)
-;     (displayn (cadr (hex-to-ascii-coords move)))
-
-;     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
-
-(let* ((footman ((get-creator archer-def) '(5 0)))
-       (world (game-world 
-         ((get-creator hoplite-def) '(10 0))
-         (list footman))))
+(let* ((world (parse-world screen piece-defs))
+       (move (list-sample (legal-moves (get-hoplite world) world))))
   (begin
     (displayn 
       (render-symbols
         " . "
-        (get-attack footman)
-        (render-world world board-with-coords)))
+        (list move) 
+        (render-world world empty-board))))
 
-    (displayn (attack-count '(7 0) (get-enemies world)))))
+    (displayn move)
+    (displayn (cadr (hex-to-ascii-coords move)))
+
+    (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
+
+; (let* ((footman1 ((get-creator archer-def) '(5 0)))
+;        (footman2 ((get-creator archer-def) '(7 -4)))
+;        (world (game-world 
+;          ((get-creator hoplite-def) '(10 0))
+;          (list footman1 footman2))))
+;   (begin
+;     (displayn 
+;       (render-world world board-with-coords))
+
+;     (displayn (attack-counts
+;       (list '(7 -2) '(8 0) '(6 0))
+;       (get-enemies world)))
+
+;     (displayn (all-min
+;       car '((1 2) (0 2) (3 1) (0 5))))
+
+;     (displayn (function-or (list cdr cdr) '(())))))

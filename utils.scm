@@ -24,3 +24,24 @@
 
 (define (list-sample x)
   (list-ref x (random (length x))))
+
+(define (list-min f lst)
+  (if (null? lst)
+    '()
+    (fold-left
+      (lambda (acc e)
+        (if (< (f e) (f acc)) e acc))
+      (car lst)
+      (cdr lst))))
+
+(define (all-min f lst)
+  (let ((min (f (list-min f lst))))
+    (filter
+      (lambda (x) (= (f x) min))
+      lst)))
+
+(define (function-or functions arguments)
+  (fold-left
+    (lambda (acc f) (or acc (apply f arguments)))
+    #f
+    functions))
