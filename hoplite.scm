@@ -81,8 +81,9 @@
     (pairs (- radius) radius (- radius) radius)))
 
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
-       (move (list-sample
-          (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))))
+       (possible-moves
+        (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
+       (move (list-sample (safest-moves possible-moves (get-enemies world)))))
   (begin
     (displayn 
       (render-symbols
@@ -99,21 +100,19 @@
 
     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
 
-; (let* ((footman1 ((get-creator archer-def) '(5 0)))
-;        (footman2 ((get-creator archer-def) '(7 -4)))
+; (let* ((footman1 ((get-creator footman-def) '(5 0)))
+;        (footman2 ((get-creator footman-def) '(6 -1)))
 ;        (world (game-world 
 ;          ((get-creator hoplite-def) '(10 0))
-;          (list footman1 footman2))))
+;          (list footman1 footman2)
+;          '())))
 ;   (begin
 ;     (displayn 
 ;       (render-world world board-with-coords))
 
 ;     (displayn (attack-counts
-;       (list '(7 -2) '(8 0) '(6 0))
+;       (list '(6 0) '(8 0) '(6 0))
 ;       (get-enemies world)))
-
-;     (displayn (all-min
-;       car '((1 2) (0 2) (3 1) (0 5))))
 
 ;     (displayn (safest-moves
 ;       '((7 -2) (8 0) (6 0))

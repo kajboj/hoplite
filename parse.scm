@@ -81,21 +81,21 @@
             (cadr hex-coords-and-color)
             (get-color piece-def)))))))
 
-(define (parse-pieces screen piece-defs)
-  (let ((hex-coords-and-colors
-          (reject-empty-tiles (hex-coords-and-color screen))))
-    (fold-left 
-      (lambda (acc piece-def)
-        (append
-          acc
-          (create-pieces
-            piece-def
-            hex-coords-and-colors)))
-      (list)
-      piece-defs)))
+(define (parse-pieces hex-coords-and-colors piece-defs)
+  (fold-left 
+    (lambda (acc piece-def)
+      (append
+        acc
+        (create-pieces
+          piece-def
+          hex-coords-and-colors)))
+    (list)
+    piece-defs))
 
 (define (parse-world screen hoplite-def enemy-defs other-pieces-defs)
-  (game-world
-    (car (parse-pieces screen (list hoplite-def)))
-    (parse-pieces screen enemy-defs)
-    (parse-pieces screen other-pieces-defs)))
+  (let ((hex-coords-and-colors
+          (reject-empty-tiles (hex-coords-and-color screen))))
+    (game-world
+      (car (parse-pieces hex-coords-and-colors (list hoplite-def)))
+      (parse-pieces hex-coords-and-colors enemy-defs)
+      (parse-pieces hex-coords-and-colors other-pieces-defs))))
