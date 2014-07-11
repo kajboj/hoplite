@@ -52,12 +52,15 @@
   (list 147 81 114)
   (lambda (coords) (piece " W " coords))))
 
-(define piece-defs (list
-  hoplite-def
-  lava-def
+(define enemy-defs (list
   footman-def
   demolitionist-def
-  hole-def
   archer-def
-  altar-def
   wizard-def))
+
+(define other-pieces-defs (list
+  lava-def
+  hole-def
+  altar-def))
+
+(define piece-defs (append (list hoplite-def) enemy-defs other-pieces-defs))

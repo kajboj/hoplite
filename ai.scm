@@ -13,9 +13,10 @@
   coords-list))
 
 (define (safest-moves coords-list enemies)
-  (all-min
-    (lambda (attack-count) (car attack-count))
-    (attack-counts coords-list enemies)))
+  (map cdr
+    (all-min
+      (lambda (attack-count) (car attack-count))
+      (attack-counts coords-list enemies))))
 
 ; (define (kill enemies old-coords new-coords)
 ;  (list-transform-negative

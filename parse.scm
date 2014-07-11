@@ -94,8 +94,8 @@
       (list)
       piece-defs)))
 
-(define (parse-world screen piece-defs)
-  (let ((pieces (parse-pieces screen piece-defs)))
-    (game-world
-      (car (list-transform-positive pieces hoplite?))
-      (list-transform-negative pieces hoplite?))))
+(define (parse-world screen hoplite-def enemy-defs other-pieces-defs)
+  (game-world
+    (car (parse-pieces screen (list hoplite-def)))
+    (parse-pieces screen enemy-defs)
+    (parse-pieces screen other-pieces-defs)))

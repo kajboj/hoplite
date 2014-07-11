@@ -14,13 +14,21 @@
 
 (define (hoplite? piece) (string=? "!H!" (get-symbol piece)))
 
-(define (game-world hoplite enemies)
-  (list hoplite enemies))
+(define (game-world hoplite enemies other-pieces)
+  (list hoplite enemies other-pieces))
 
 (define (get-hoplite world) (car world))
 (define (get-enemies world) (cadr world))
+(define (get-other-pieces world) (caddr world))
+
+(define (get-non-hoplite-pieces world)
+  (append (get-other-pieces world) (get-enemies world)))
+
 (define (get-pieces world)
-  (cons (get-hoplite world) (get-enemies world)))
+  (append
+    (list (get-hoplite world))
+    (get-enemies world)
+    (get-other-pieces world)))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -59,9 +67,9 @@
   (let ((positive (coverage-checker-positive coords-list)))
     (lambda (coords) (not (positive coords)))))
 
-(define (legal-moves hoplite world)
+(define (legal-moves hoplite non-hoplite-pieces)
   (filter
-    (coverage-checker-negative (map get-coords (get-enemies world)))
+    (coverage-checker-negative (map get-coords non-hoplite-pieces))
     (neighbours 1 (get-coords hoplite))))
 
 (define (coord-shifts radius)
@@ -72,8 +80,9 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
-(let* ((world (parse-world screen piece-defs))
-       (move (list-sample (legal-moves (get-hoplite world) world))))
+(let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
+       (move (list-sample
+          (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))))
   (begin
     (displayn 
       (render-symbols
@@ -83,6 +92,10 @@
 
     (displayn move)
     (displayn (cadr (hex-to-ascii-coords move)))
+
+    (displayn (safest-moves
+      '((7 -2) (8 0) (6 0))
+      (get-enemies world)))
 
     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
 
@@ -102,4 +115,7 @@
 ;     (displayn (all-min
 ;       car '((1 2) (0 2) (3 1) (0 5))))
 
-;     (displayn (function-or (list cdr cdr) '(())))))
+;     (displayn (safest-moves
+;       '((7 -2) (8 0) (6 0))
+;       (get-enemies world)))
+;     ))
