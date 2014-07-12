@@ -96,10 +96,6 @@
 
     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
 
-(let ((colors
-  (reject-empty-tiles (hex-coords-and-color screen))))
-(displayn colors))
-
 ; (let* ((footman1 ((get-creator footman-def) '(5 0)))
 ;        (footman2 ((get-creator footman-def) '(6 -1)))
 ;        (world (game-world 

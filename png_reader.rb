@@ -122,13 +122,10 @@ def ratio_to_pixels(col_ratio, row_ratio)
   # screen_dimensions = Dimensions.new(1080, 1920)
   image = ChunkyPNG::Image.from_file(png_filename('cropped.png'))
   screen_dimensions = Dimensions.new(image.width, image.height)
-  puts col_ratio, row_ratio
-  puts screen_dimensions.width, screen_dimensions.height
   col, row = [
     col_ratio * screen_dimensions.width,
     (row_ratio  + TAP_CORRECTION[:row]) * screen_dimensions.height
   ].map(&:to_i).tap do |(col, row)|
-    puts col, row
     put_dot_on_image(col, row, 'cropped.png', 'tapped.png')
   end
 
