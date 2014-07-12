@@ -48,7 +48,7 @@
             \\___/A 0\\___/
                 \\___/")
 
-(define board-for-piece-recognition "
+(define board-with-Xs "
                  ___
              ___/   \\___
          ___/   \\_X_/   \\___

@@ -33,14 +33,6 @@
         (cons coords acc)
         acc))))
 
-(define (hex-coords ascii-coords-of-X)
-  (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))
-    (traverse-board board-with-coords '()
-      (lambda (chars acc coords)
-        (if (coords=? coords ascii-coords-of-hex)
-          (parse-coords (list->string (sublist chars 0 3)))
-          acc)))))
-
 (define (color screen ascii-coords)
   (vector-ref
     (vector-ref screen (- (row ascii-coords) 1))
@@ -50,9 +42,9 @@
   (map
     (lambda (ascii-coords)
       (list
-        (hex-coords ascii-coords)
+        (ascii-to-hex ascii-coords)
         (color screen ascii-coords)))
-    (ascii-coords-of-Xs board-for-piece-recognition)))
+    (map car ascii-to-hex-map)))
 
 (define (number-within? tolerance x y)
   (<= (abs (- x y)) tolerance))
@@ -94,3 +86,17 @@
       (car (parse-pieces hex-coords-and-colors (list hoplite-def)))
       (parse-pieces hex-coords-and-colors enemy-defs)
       (parse-pieces hex-coords-and-colors other-pieces-defs))))
+
+(define (hex-coords ascii-coords-of-X)
+  (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))
+    (traverse-board board-with-coords '()
+      (lambda (chars acc coords)
+        (if (coords=? coords ascii-coords-of-hex)
+          (parse-coords (list->string (sublist chars 0 3)))
+          acc)))))
+
+(define (build-hex-to-ascii-map board-with-Xs)
+  (map
+    (lambda (ascii-coords)
+      (list (hex-coords ascii-coords) ascii-coords))
+    (ascii-coords-of-Xs board-with-Xs)))

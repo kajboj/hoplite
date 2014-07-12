@@ -53,12 +53,6 @@
         (max (get-x acc) (get-x coords))
         (max (get-y acc) (get-y coords))))))
 
-(define (hex-to-ascii-coords hex)
-  (assoc hex (map
-    (lambda (ascii-coords)
-      (list (hex-coords ascii-coords) ascii-coords))
-    (ascii-coords-of-Xs board-for-piece-recognition))))
-
 (define (ascii-coords-to-proportions ascii-coords)
   (let* ((dim (board-dimensions empty-board))
          (width (car dim))

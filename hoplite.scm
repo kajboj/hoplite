@@ -81,21 +81,34 @@
        (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
     (pairs (- radius) radius (- radius) radius)))
 
+(define hex-to-ascii-map
+  (build-hex-to-ascii-map board-with-Xs))
+
+(define (hex-to-ascii ascii-coords)
+  (cadr (assoc ascii-coords hex-to-ascii-map)))
+
+(define ascii-to-hex-map
+  (map
+    (lambda (pair) (list (cadr pair) (car pair)))
+    hex-to-ascii-map))
+
+(define (ascii-to-hex hex-coords)
+  (cadr (assoc hex-coords ascii-to-hex-map)))
+
+
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
        (hoplite-coords (get-coords (get-hoplite world)))
        (possible-moves
-        (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
+         (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
        (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world))))
-       (move-ascii-coords (cadr (hex-to-ascii-coords move))))
+       (move-ascii-coords (hex-to-ascii move)))
   (begin
     (displayn 
       (render-symbols
         " . "
         (list move) 
         (render-world world empty-board))))
-
     (displayn move)
-
     (displayn (ascii-coords-to-proportions move-ascii-coords)))
 
 ; (let* ((footman ((get-creator footman-def) '(5 0)))
@@ -121,3 +134,4 @@
 ;         (lambda (enemy) (cons (get-symbol enemy) (get-coords enemy)))
 ;         (kill (get-enemies world) '(6 0) '(5 1))))
 ;     ))
+
