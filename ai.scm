@@ -1,22 +1,31 @@
-(define (attack-count current-coords coords enemies)
+(define (attack-count coords enemies)
   (fold-left
     (lambda (acc enemy)
       (+ acc
         (if (coverage-check (get-attack enemy) coords) 1 0)))
     0
-    (kill enemies current-coords coords)))
-
-(define (attack-counts current-coords coords-list enemies)
-  (map
-    (lambda (coords)
-      (cons (attack-count current-coords coords enemies) coords))
-    coords-list))
+    enemies))
 
 (define (best-moves current-coords coords-list enemies)
   (map cdr
     (all-min
       (lambda (attack-count) (car attack-count))
-      (attack-counts current-coords coords-list enemies))))
+      (score-moves current-coords coords-list enemies))))
+
+(define (kill-count enemies enemies-after-move)
+  (if (= (length enemies) (length enemies-after-move)) 0 -0.1))
+
+(define (score-move current-coords move-coords enemies)
+  (let ((enemies-after-move (kill enemies current-coords move-coords)))
+    (+
+      (attack-count move-coords enemies-after-move)
+      (kill-count enemies enemies-after-move))))
+
+(define (score-moves current-coords moves-list enemies)
+  (map
+    (lambda (move-coords)
+      (cons (score-move current-coords move-coords enemies) move-coords))
+    moves-list))
 
 (define (kill enemies old-coords new-coords)
   (reject
