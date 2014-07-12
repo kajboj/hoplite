@@ -85,7 +85,8 @@
        (hoplite-coords (get-coords (get-hoplite world)))
        (possible-moves
         (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
-       (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world)))))
+       (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world))))
+       (move-ascii-coords (cadr (hex-to-ascii-coords move))))
   (begin
     (displayn 
       (render-symbols
@@ -94,9 +95,8 @@
         (render-world world empty-board))))
 
     (displayn move)
-    (displayn (cadr (hex-to-ascii-coords move)))
 
-    (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
+    (displayn (ascii-coords-to-proportions move-ascii-coords)))
 
 ; (let* ((footman ((get-creator footman-def) '(5 0)))
 ;        (wizard ((get-creator wizard-def) '(7 0)))
