@@ -42,8 +42,8 @@
           acc)))))
 
 (define (color screen ascii-coords)
-  (list-ref
-    (list-ref screen (- (row ascii-coords) 1))
+  (vector-ref
+    (vector-ref screen (- (row ascii-coords) 1))
     (col ascii-coords)))
 
 (define (hex-coords-and-color screen)

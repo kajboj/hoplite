@@ -72,10 +72,10 @@ end
 def pixelize(image, ascii_board_dimensions, pixel_dimensions)
   png = ChunkyPNG::Image.new(image.width, image.height, ChunkyPNG::Color.rgba(0, 255, 0, 255))
   scm = File.open('screen.scm', 'w') do |f|
-    f.write("(define screen '(\n")
+    f.write("(define screen '#(\n")
 
     (0..ascii_board_dimensions.height-1).each do |ascii_row|
-      f.write("(")
+      f.write("#(")
       (0..ascii_board_dimensions.width-1).each do |ascii_col|
         avg_color = nil
         each_pixel_of_ascii_tile(image, ascii_col, ascii_row, pixel_dimensions) do |col, row, avg|
