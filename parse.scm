@@ -63,9 +63,6 @@
     (number-within? tolerance (green c1) (green c2))
     (number-within? tolerance (blue c1) (blue c2))))
 
-(define (empty-tile? color)
-  (color-within? 5 color (list 66 66 66)))
-
 (define (reject-empty-tiles hex-coords-and-colors)
   (list-transform-negative
     hex-coords-and-colors
@@ -77,9 +74,7 @@
       (list-transform-positive
         hex-coords-and-colors
         (lambda (hex-coords-and-color)
-          (color-within? 15
-            (cadr hex-coords-and-color)
-            (get-color piece-def)))))))
+          (is-tile-type? (cadr hex-coords-and-color) piece-def))))))
 
 (define (parse-pieces hex-coords-and-colors piece-defs)
   (fold-left 

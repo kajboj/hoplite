@@ -6,6 +6,10 @@ PNG_DIR = 'png'
 CROP = {top: 18, bottom: -101}
 TAP_CORRECTION = {row: -0.05}
 
+def png_filename(filename)
+  File.join(PNG_DIR, filename)
+end
+
 class Dimensions
   attr_reader :width, :height
   def initialize(width, height)
@@ -61,7 +65,7 @@ def crop(image, minrow, maxrow)
     end
   end
 
-  png.save(File.join(PNG_DIR, 'cropped.png'))
+  png.save(png_filename('cropped.png'))
   png
 end
 
@@ -86,7 +90,7 @@ def pixelize(image, ascii_board_dimensions, pixel_dimensions)
     f.write("))")
   end
 
-  png.save(File.join(PNG_DIR, 'pixelated.png'))
+  png.save(png_filename('pixelated.png'))
 end
 
 def each_pixel_of_ascii_tile(image, ascii_col, ascii_row, pixel_dimensions)
@@ -116,7 +120,7 @@ end
 
 def ratio_to_pixels(col_ratio, row_ratio)
   # screen_dimensions = Dimensions.new(1080, 1920)
-  image = ChunkyPNG::Image.from_file(File.join(PNG_DIR, 'cropped.png'))
+  image = ChunkyPNG::Image.from_file(png_filename('cropped.png'))
   screen_dimensions = Dimensions.new(image.width, image.height)
   puts col_ratio, row_ratio
   puts screen_dimensions.width, screen_dimensions.height
@@ -135,11 +139,11 @@ def ratio_to_pixels(col_ratio, row_ratio)
 end
 
 def put_dot_on_image(col, row, input_filename, output_filename)
-  image = ChunkyPNG::Image.from_file(File.join(PNG_DIR, input_filename))
+  image = ChunkyPNG::Image.from_file(png_filename(input_filename))
   [[0, 1], [1, 1], [1, 0], [0, 0]].each do |(a, b)|
     image[col+a, row+b] = ChunkyPNG::Color.rgba(255, 0, 0, 255)
   end
-  image.save(File.join(PNG_DIR, output_filename))
+  image.save(png_filename(output_filename))
 end
 
 def parse_move(output)
@@ -150,11 +154,11 @@ def parse_move(output)
   end
 end
 
-input_filename = File.join(PNG_DIR, 'screen.png')
+input_filename = png_filename('screen.png')
 
-`convert -resize 25% #{input_filename} screen-small.png`
+`convert -resize 25% #{input_filename} #{png_filename('screen-small.png')}`
 
-image = ChunkyPNG::Image.from_file('screen-small.png')
+image = ChunkyPNG::Image.from_file(png_filename('screen-small.png'))
 
 board = load_ascii_board
 

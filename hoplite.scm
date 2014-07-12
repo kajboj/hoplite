@@ -89,16 +89,16 @@
       (render-symbols
         " . "
         (list move) 
-        (render-world world empty-board))))
+        (render-world world board-with-coords))))
 
     (displayn move)
     (displayn (cadr (hex-to-ascii-coords move)))
 
-    (displayn (safest-moves
-      '((7 -2) (8 0) (6 0))
-      (get-enemies world)))
-
     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
+
+(let ((colors
+  (reject-empty-tiles (hex-coords-and-color screen))))
+(displayn colors))
 
 ; (let* ((footman1 ((get-creator footman-def) '(5 0)))
 ;        (footman2 ((get-creator footman-def) '(6 -1)))
