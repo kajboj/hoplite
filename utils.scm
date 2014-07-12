@@ -45,3 +45,6 @@
     (lambda (acc f) (or acc (apply f arguments)))
     #f
     functions))
+
+(define reject list-transform-negative)
+(define select list-transform-positive)

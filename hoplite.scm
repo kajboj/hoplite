@@ -6,13 +6,8 @@
 (load "screen.scm")
 (load "ai.scm")
 
-(define (get-color piece-def) (car piece-def))
-(define (get-creator piece-def) (cadr piece-def))
-
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
-
-(define (hoplite? piece) (string=? "!H!" (get-symbol piece)))
 
 (define (game-world hoplite enemies other-pieces)
   (list hoplite enemies other-pieces))
@@ -43,6 +38,9 @@
 (define (coords-add coords1 coords2)
   (map + coords1 coords2))
 
+(define (coords-sub coords1 coords2)
+  (map - coords1 coords2))
+
 (define (coords-list-add coords-list coords)
   (map
     (lambda (x) (coords-add coords x))
@@ -54,6 +52,9 @@
 
 (define (neighbours radius coords)
   (shifted-on-board coords (coord-shifts radius)))
+
+(define (is-neighbour? radius coords1 coords2)
+  (coverage-check (neighbours radius coords1) coords2))
 
 (define (coverage-check coords-list coords)
   (list-search-positive coords-list 
@@ -81,36 +82,42 @@
     (pairs (- radius) radius (- radius) radius)))
 
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
+       (hoplite-coords (get-coords (get-hoplite world)))
        (possible-moves
         (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
-       (move (list-sample (safest-moves possible-moves (get-enemies world)))))
+       (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world)))))
   (begin
     (displayn 
       (render-symbols
         " . "
         (list move) 
-        (render-world world board-with-coords))))
+        (render-world world empty-board))))
 
     (displayn move)
     (displayn (cadr (hex-to-ascii-coords move)))
 
     (displayn (ascii-coords-to-proportions (cadr (hex-to-ascii-coords move)))))
 
-; (let* ((footman1 ((get-creator footman-def) '(5 0)))
-;        (footman2 ((get-creator footman-def) '(6 -1)))
+; (let* ((footman ((get-creator footman-def) '(5 0)))
+;        (wizard ((get-creator wizard-def) '(7 0)))
+;        (archer ((get-creator archer-def) '(4 2)))
+;        (demol ((get-creator demolitionist-def) '(5 2)))
+;        (bomb ((get-creator bomb-def) '(4 1)))
 ;        (world (game-world 
 ;          ((get-creator hoplite-def) '(10 0))
-;          (list footman1 footman2)
+;          (list footman wizard archer demol bomb)
 ;          '())))
 ;   (begin
 ;     (displayn 
 ;       (render-world world board-with-coords))
 
-;     (displayn (attack-counts
-;       (list '(6 0) '(8 0) '(6 0))
-;       (get-enemies world)))
+;     (displayn
+;       (select
+;         (get-enemies world)
+;         killable?))
 
-;     (displayn (safest-moves
-;       '((7 -2) (8 0) (6 0))
-;       (get-enemies world)))
+;     (displayn 
+;       (map 
+;         (lambda (enemy) (cons (get-symbol enemy) (get-coords enemy)))
+;         (kill (get-enemies world) '(6 0) '(5 1))))
 ;     ))

@@ -11,9 +11,6 @@ function GraphSearch(problem) returns a solution, or failure
 
 
 
-distance from the ladder
+distance from the ladder along shortest path
 number of hearts
 number of enemies
-
-questions:
-* do enemies make their moves in some kind of fixed order?
