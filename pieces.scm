@@ -67,7 +67,17 @@
 (define wizard-def (list
   " W "
   (list 147 81 114)
-  (lambda (coords) (piece (car wizard-def) coords))))
+  (lambda (coords)
+    (enemy (car wizard-def) coords
+      (shifted-on-board coords
+          (list
+            '(-5  0) '(-4  0) '(-3  0) '(-2  0) '(-1  0)
+            '( 5  0) '( 4  0) '( 3  0) '( 2  0) '( 1  0)
+            '( 0 -5) '( 0 -4) '( 0 -3) '( 0 -2) '( 0 -1)
+            '( 0  5) '( 0  4) '( 0  3) '( 0  2) '( 0  1)
+            '( 5 -5) '( 4 -4) '( 3 -3) '( 2 -2) '( 1 -1)
+            '(-5  5) '(-4  4) '(-3  3) '(-2  2) '(-1  1)
+            ))))))
 
 (define lava-def (list
   "~~~"
