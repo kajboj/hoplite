@@ -68,10 +68,10 @@
   (let ((positive (coverage-checker-positive coords-list)))
     (lambda (coords) (not (positive coords)))))
 
-(define (legal-moves hoplite non-hoplite-pieces)
+(define (legal-moves coords non-visitable-coords)
   (filter
-    (coverage-checker-negative (map get-coords non-hoplite-pieces))
-    (neighbours 1 (get-coords hoplite))))
+    (coverage-checker-negative non-visitable-coords)
+    (neighbours 1 coords)))
 
 (define (coord-shifts radius)
   (filter
@@ -98,8 +98,9 @@
 
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
        (hoplite-coords (get-coords (get-hoplite world)))
+       (non-visitable-coords (map get-coords (get-non-hoplite-pieces world)))
        (possible-moves
-         (legal-moves (get-hoplite world) (get-non-hoplite-pieces world)))
+         (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
        (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world))))
        (move-ascii-coords (hex-to-ascii move)))
   (begin
@@ -134,4 +135,3 @@
 ;         (lambda (enemy) (cons (get-symbol enemy) (get-coords enemy)))
 ;         (kill (get-enemies world) '(6 0) '(5 1))))
 ;     ))
-

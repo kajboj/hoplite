@@ -1,0 +1,2 @@
+Bomb is detected for each demolitionist, that causes hoplite to not attack
+demolitionists.

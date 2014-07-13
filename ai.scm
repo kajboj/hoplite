@@ -9,7 +9,7 @@
 (define (best-moves current-coords coords-list enemies)
   (map cdr
     (all-min
-      (lambda (attack-count) (car attack-count))
+      (lambda (scored-move) (car scored-move))
       (score-moves current-coords coords-list enemies))))
 
 (define (kill-count enemies enemies-after-move)
