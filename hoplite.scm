@@ -127,7 +127,14 @@
         move
         (render-world 
           world
-          (render-symbols " ` " goal-path empty-board)))
-      ))
-  (displayn move)
-  (displayn (ascii-coords-to-proportions move-ascii-coords)))
+          (render-symbols " ` " goal-path empty-board))))
+    (displayn move)
+    (displayn (ascii-coords-to-proportions move-ascii-coords))
+    
+    ))
+
+; (let ((hex-coords-and-colors
+;         (reject-empty-tiles (hex-coords-and-color screen))))
+;   (displayn board-with-coords)
+;   (displayn hex-coords-and-colors)
+;   )

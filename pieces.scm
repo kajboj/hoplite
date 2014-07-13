@@ -15,31 +15,43 @@
   (is-tile-type? color empty-def))
 
 (define (is-tile-type? color piece-def)
-  (color-within? 15 color (cadr piece-def)))
+  ((cadr piece-def) color))
+
+(define (single-color-recognizer piece-color)
+  (lambda (color)
+    (color-within? 15 color piece-color)))
+
+(define (multi-color-recognizer piece-color-list)
+  (lambda (color)
+    (fold-left
+      (lambda (acc piece-color)
+        (or acc (color-within? 15 color piece-color)))
+      #f
+      piece-color-list)))
 
 (define (killable? enemy)
   (not (string=? (get-symbol bomb-def) (get-symbol enemy))))
 
 (define empty-def (list
   "   "
-  (list 66 66 66)
+  (single-color-recognizer '(66 66 66))
   (lambda (coords) (piece (car empty-def) coords))))
 
 (define hoplite-def (list
   "!H!"
-  (list 156 157 156)
+  (multi-color-recognizer '((156 157 156) (136 107 78)))
   (lambda (coords) (piece (car hoplite-def) coords))))
 
 (define footman-def (list
   " F "
-  (list 152 116 80)
+  (single-color-recognizer '(152 116 80))
   (lambda (coords)
     (enemy (car footman-def) coords
       (neighbours 1 coords)))))
 
 (define archer-def (list
   " A "
-  (list 116 153 80)
+  (single-color-recognizer '(116 153 80))
   (lambda (coords)
     (enemy (car archer-def) coords
       (shifted-on-board coords
@@ -54,19 +66,19 @@
 
 (define demolitionist-def (list
   " D "
-  (list 142 76 77)
+  (single-color-recognizer '(142 76 77))
   (lambda (coords) (enemy (car demolitionist-def) coords (list)))))
 
 (define bomb-def (list
   " b "
-  (list 171 81 82)
+  (single-color-recognizer '(171 81 82))
   (lambda (coords)
     (enemy (car bomb-def) coords
       (neighbours 1 coords)))))
 
 (define wizard-def (list
   " W "
-  (list 147 81 114)
+  (single-color-recognizer '(147 81 114))
   (lambda (coords)
     (enemy (car wizard-def) coords
       (shifted-on-board coords
@@ -81,17 +93,22 @@
 
 (define lava-def (list
   "~~~"
-  (list 69 29 29)
+  (single-color-recognizer '(69 29 29))
   (lambda (coords) (piece (car lava-def) coords))))
 
 (define hole-def (list
   " # "
-  (list 98 97 98)
+  (single-color-recognizer '(98 97 98))
   (lambda (coords) (piece (car hole-def) coords))))
+
+(define portal-def (list
+  " @ "
+  (single-color-recognizer '(93 77 109))
+  (lambda (coords) (piece (car portal-def) coords))))
 
 (define altar-def (list
   "alt"
-  (list 193 194 193)
+  (single-color-recognizer '(193 194 193))
   (lambda (coords) (piece (car altar-def) coords))))
 
 (define enemy-defs (list
@@ -103,6 +120,7 @@
 
 (define other-pieces-defs (list
   lava-def
+  portal-def
   altar-def))
 
 (define piece-defs (append

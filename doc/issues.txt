@@ -1,2 +1,7 @@
 Bomb is detected for each demolitionist, that causes hoplite to not attack
 demolitionists.
+
+Hoplite is not recognized after picking magic robe on level 16.
+
+Sometimes footman demon is right on the ladder tile and then path finding
+algorithm blows up.

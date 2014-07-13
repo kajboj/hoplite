@@ -1,7 +1,7 @@
 adb = "/home/kajboj/code/adt/adt-bundle-linux-x86-20131030/sdk/platform-tools/adb"
 regex = 's/\x0D\x0A/\x0A/g'
 
-# while true do
+while true do
   puts 'getting image from android'
   `#{adb} shell screencap -p | perl -pe '#{regex}' > png/screen.png`
   puts 'processing image'
@@ -16,7 +16,7 @@ regex = 's/\x0D\x0A/\x0A/g'
   puts 'tapping'
   `#{adb} shell input tap #{col} #{row}`
   sleep 0.7
-# end
+end
 
 # image = Image.from_android
 # cropped = image.crop(x, y, width, height)
