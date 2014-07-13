@@ -133,8 +133,12 @@
     
     ))
 
-; (let ((hex-coords-and-colors
-;         (reject-empty-tiles (hex-coords-and-color screen))))
+; (let ((hex-coords-and-colors-list
+;         (reject-empty-tiles (hex-coords-and-colors screen))))
 ;   (displayn board-with-coords)
-;   (displayn hex-coords-and-colors)
+;   (displayn hex-coords-and-colors-list)
 ;   )
+
+; (displayn 
+;   ((two-pixel-recognizer '((0 0 0) (100 100 100)))
+;    '((-10 0 0) (100 100 100))))

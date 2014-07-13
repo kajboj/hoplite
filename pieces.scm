@@ -11,23 +11,31 @@
 (define (get-color piece-def) (cadr piece-def))
 (define (get-creator piece-def) (caddr piece-def))
 
-(define (empty-tile? color)
-  (is-tile-type? color empty-def))
+(define (empty-tile? colors)
+  (is-tile-type? colors empty-def))
 
-(define (is-tile-type? color piece-def)
-  ((cadr piece-def) color))
+(define (is-tile-type? colors piece-def)
+  ((cadr piece-def) colors))
 
 (define (single-color-recognizer piece-color)
-  (lambda (color)
-    (color-within? 15 color piece-color)))
+  (lambda (screen-colors)
+    (color-within? 15 (car screen-colors) piece-color)))
 
 (define (multi-color-recognizer piece-color-list)
-  (lambda (color)
+  (lambda (screen-colors)
     (fold-left
       (lambda (acc piece-color)
-        (or acc (color-within? 15 color piece-color)))
+        (or acc (color-within? 15 (car screen-colors) piece-color)))
       #f
       piece-color-list)))
+
+(define (two-pixel-recognizer piece-color-list)
+  (lambda (screen-colors)
+    (fold-left
+      (lambda (acc pair-to-compare)
+        (and acc (color-within? 15 (car pair-to-compare) (cadr pair-to-compare))))
+      #t
+      (zip piece-color-list screen-colors))))
 
 (define (killable? enemy)
   (not (string=? (get-symbol bomb-def) (get-symbol enemy))))
@@ -66,12 +74,12 @@
 
 (define demolitionist-def (list
   " D "
-  (single-color-recognizer '(142 76 77))
+  (two-pixel-recognizer '((163 83 84) (136 80 80)))
   (lambda (coords) (enemy (car demolitionist-def) coords (list)))))
 
 (define bomb-def (list
   " b "
-  (single-color-recognizer '(171 81 82))
+  (two-pixel-recognizer '((172 83 83) (87 73 73)))
   (lambda (coords)
     (enemy (car bomb-def) coords
       (neighbours 1 coords)))))

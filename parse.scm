@@ -38,12 +38,13 @@
     (vector-ref screen (- (row ascii-coords) 1))
     (col ascii-coords)))
 
-(define (hex-coords-and-color screen)
+(define (hex-coords-and-colors screen)
   (map
     (lambda (ascii-coords)
       (list
         (ascii-to-hex ascii-coords)
-        (color screen ascii-coords)))
+        (list (color screen ascii-coords)
+              (color screen (coords-add '(-1 0) ascii-coords)))))
     (map car ascii-to-hex-map)))
 
 (define (number-within? tolerance x y)
@@ -55,38 +56,38 @@
     (number-within? tolerance (green c1) (green c2))
     (number-within? tolerance (blue c1) (blue c2))))
 
-(define (reject-empty-tiles hex-coords-and-colors)
+(define (reject-empty-tiles hex-coords-and-colors-list)
   (list-transform-negative
-    hex-coords-and-colors
+    hex-coords-and-colors-list
     (lambda (color) (empty-tile? (cadr color)))))
 
-(define (create-pieces piece-def hex-coords-and-colors)
+(define (create-pieces piece-def hex-coords-and-colors-list)
   (map (get-creator piece-def)
     (map car
       (list-transform-positive
-        hex-coords-and-colors
-        (lambda (hex-coords-and-color)
-          (is-tile-type? (cadr hex-coords-and-color) piece-def))))))
+        hex-coords-and-colors-list
+        (lambda (hex-coords-and-colors)
+          (is-tile-type? (cadr hex-coords-and-colors) piece-def))))))
 
-(define (parse-pieces hex-coords-and-colors piece-defs)
+(define (parse-pieces hex-coords-and-colors-list piece-defs)
   (fold-left 
     (lambda (acc piece-def)
       (append
         acc
         (create-pieces
           piece-def
-          hex-coords-and-colors)))
+          hex-coords-and-colors-list)))
     (list)
     piece-defs))
 
 (define (parse-world screen hoplite-def enemy-defs other-pieces-defs)
-  (let ((hex-coords-and-colors
-          (reject-empty-tiles (hex-coords-and-color screen))))
+  (let ((hex-coords-and-colors-list
+          (reject-empty-tiles (hex-coords-and-colors screen))))
     (game-world
-      (car (parse-pieces hex-coords-and-colors (list hoplite-def)))
-      (parse-pieces hex-coords-and-colors enemy-defs)
-      (parse-pieces hex-coords-and-colors other-pieces-defs)
-      (car (parse-pieces hex-coords-and-colors (list hole-def))))))
+      (car (parse-pieces hex-coords-and-colors-list (list hoplite-def)))
+      (parse-pieces hex-coords-and-colors-list enemy-defs)
+      (parse-pieces hex-coords-and-colors-list other-pieces-defs)
+      (car (parse-pieces hex-coords-and-colors-list (list hole-def))))))
 
 (define (hex-coords ascii-coords-of-X)
   (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))
