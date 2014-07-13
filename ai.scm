@@ -15,15 +15,15 @@
 (define (kill-count enemies enemies-after-move)
   (if (= (length enemies) (length enemies-after-move)) 0 -0.1))
 
-(define (exit-drive current-coords new-coords goal-path)
-  0)
+(define (exit-drive new-coords goal-path)
+  (if (coverage-check goal-path new-coords) -0.2 0))
 
 (define (score-move current-coords move-coords enemies goal-path)
   (let ((enemies-after-move (kill enemies current-coords move-coords)))
     (+
       (attack-count move-coords enemies-after-move)
       (kill-count enemies enemies-after-move)
-      (exit-drive current-coords move-coords goal-path))))
+      (exit-drive move-coords goal-path))))
 
 (define (score-moves current-coords moves-list enemies goal-path)
   (map
