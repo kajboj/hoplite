@@ -10,12 +10,13 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define (game-world hoplite enemies other-pieces)
-  (list hoplite enemies other-pieces))
+(define (game-world hoplite enemies other-pieces hole)
+  (list hoplite enemies other-pieces hole))
 
 (define (get-hoplite world) (car world))
 (define (get-enemies world) (cadr world))
 (define (get-other-pieces world) (caddr world))
+(define (get-hole world) (cadddr world))
 
 (define (get-non-hoplite-pieces world)
   (append (get-other-pieces world) (get-enemies world)))
@@ -24,7 +25,8 @@
   (append
     (list (get-hoplite world))
     (get-enemies world)
-    (get-other-pieces world)))
+    (get-other-pieces world)
+    (list (get-hole world))))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -97,48 +99,35 @@
   (cadr (assoc hex-coords ascii-to-hex-map)))
 
 
-; (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
-;        (hoplite-coords (get-coords (get-hoplite world)))
-;        (non-visitable-coords (map get-coords (get-non-hoplite-pieces world)))
-;        (possible-moves
-;          (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
-;        (move (list-sample (best-moves hoplite-coords possible-moves (get-enemies world))))
-;        (move-ascii-coords (hex-to-ascii move)))
-;   (begin
-;     (displayn 
-;       (render-symbols
-;         " . "
-;         (list move) 
-;         (render-world world empty-board))))
-;     (displayn move)
-;     (displayn (ascii-coords-to-proportions move-ascii-coords)))
+(let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
+       (hoplite-coords (get-coords (get-hoplite world)))
+       (non-visitable-coords (map get-coords (get-non-hoplite-pieces world)))
+       (possible-moves
+         (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
 
-(let* ((all-hexs (map car hex-to-ascii-map))
-       (visited (list '(5 0)))
-       (fringes (list visited))
-       (non-visitable-coords '((4 2) (4 1) (5 1) (5 2)))
-       (neighbour-generator
-         (lambda (coords)
-           (legal-moves coords non-visitable-coords))))
+       (goal-path
+         (path
+           (get-coords (get-hoplite world))
+           (get-coords (get-hole world))
+           (lambda (coords)
+             (legal-moves coords (map get-coords (get-other-pieces world))))))
 
-  (displayn board-with-coords)
+       (move (list-sample
+               (best-moves
+                  hoplite-coords
+                  possible-moves
+                  (get-enemies world)
+                  goal-path)))
+       (move-ascii-coords (hex-to-ascii move)))
   
-  ; (displayn
-  ;   (fold-left
-  ;     (lambda (acc fringe)
-  ;       (cons
-  ;         (+ 1 (car acc))
-  ;         (render-symbols
-  ;           (string-append " " (number->string (car acc)) " ") 
-  ;           fringe
-  ;           (cdr acc))))
-  ;     (cons 0 empty-board)
-  ;     (reverse (path '(5 0) '(6 1) neighbour-generator))))
-
-  (displayn
-    (render-symbols
-      " . "
-      (path '(5 0) '(5 0) neighbour-generator)
-      board-with-coords
-    )
-  ))
+  (begin
+    (displayn 
+      (render-symbol
+        " . "
+        move
+        (render-world 
+          world
+          (render-symbols " ` " goal-path empty-board)))
+      ))
+  (displayn move)
+  (displayn (ascii-coords-to-proportions move-ascii-coords)))

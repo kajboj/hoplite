@@ -103,7 +103,10 @@
 
 (define other-pieces-defs (list
   lava-def
-  hole-def
   altar-def))
 
-(define piece-defs (append (list hoplite-def) enemy-defs other-pieces-defs))
+(define piece-defs (append
+                     (list hoplite-def)
+                     enemy-defs
+                     other-pieces-defs
+                     (list hole-def)))
