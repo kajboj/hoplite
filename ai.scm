@@ -1,3 +1,9 @@
+(define (establish-goal world)
+  (let ((killable-enemies (select (get-enemies world) killable?)))
+    (if (any? killable-enemies)
+      (get-coords (car killable-enemies))
+      (get-coords (get-hole world)))))
+
 (define (attack-count coords enemies)
   (fold-left
     (lambda (acc enemy)

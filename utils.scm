@@ -51,3 +51,5 @@
 
 (define reject list-transform-negative)
 (define select list-transform-positive)
+
+(define (any? lst) (not (null? lst)))

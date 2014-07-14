@@ -109,12 +109,11 @@
          (lambda (coords)
            (legal-moves coords (map get-coords (get-other-pieces world)))))
 
+       (goal (establish-goal world))
+
        (goal-distance-generator
          (lambda (start)
-           (distance
-             start
-             (get-coords (get-hole world))
-             neighbours-generator)))
+           (distance start goal neighbours-generator)))
        
        (move (list-sample
                (best-moves
