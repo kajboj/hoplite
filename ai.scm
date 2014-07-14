@@ -2,7 +2,7 @@
   (let ((killable-enemies (select (get-enemies world) killable?)))
     (if (any? killable-enemies)
       (get-coords (car killable-enemies))
-      (get-coords (get-hole world)))))
+      (get-coords (get-altar world)))))
 
 (define (attack-count coords enemies)
   (fold-left
@@ -22,7 +22,7 @@
   (if (= (length enemies) (length enemies-after-move)) 0 -0.1))
 
 (define (goal-drive new-coords goal-distance max-distance)
-  (* -0.2 (- max-distance goal-distance)))
+  (* -0.1 (- max-distance goal-distance)))
 
 (define (score-move current-coords move-coords enemies goal-distance max-distance)
   (let ((enemies-after-move (kill enemies current-coords move-coords)))

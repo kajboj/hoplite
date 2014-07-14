@@ -22,8 +22,7 @@
 (define (get-non-visitable-pieces world)
   (append
     (get-other-pieces world)
-    (get-enemies world)
-    (list (get-altar world))))
+    (get-enemies world)))
 
 (define (get-pieces world)
   (append
@@ -133,9 +132,8 @@
       (render-symbol
         " . "
         move
-        (render-world 
-          world
-          empty-board)))
+        (render-world world empty-board)))
+
     (displayn move)
     (displayn (ascii-coords-to-proportions move-ascii-coords))
     
