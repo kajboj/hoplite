@@ -1,3 +1,6 @@
+(define (distance start finish neighbour-generator)
+  (length (path start finish neighbour-generator)))
+
 (define (path start finish neighbour-generator)
   (let ((fringes (flood-fill
                    finish

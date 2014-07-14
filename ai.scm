@@ -6,32 +6,44 @@
     0
     enemies))
 
-(define (best-moves current-coords coords-list enemies goal-path-generator)
+(define (best-moves current-coords coords-list enemies goal-distance-generator)
   (map cdr
     (all-min
       (lambda (scored-move) (car scored-move))
-      (score-moves current-coords coords-list enemies goal-path-generator))))
+      (score-moves current-coords coords-list enemies goal-distance-generator))))
 
 (define (kill-count enemies enemies-after-move)
   (if (= (length enemies) (length enemies-after-move)) 0 -0.1))
 
-(define (goal-drive new-coords goal-path)
-  (if (coverage-check goal-path new-coords) -0.2 0))
+(define (goal-drive new-coords goal-distance max-distance)
+  (* -0.2 (- max-distance goal-distance)))
 
-(define (score-move current-coords move-coords enemies goal-path-generator)
+(define (score-move current-coords move-coords enemies goal-distance max-distance)
   (let ((enemies-after-move (kill enemies current-coords move-coords)))
     (+
       (attack-count move-coords enemies-after-move)
       (kill-count enemies enemies-after-move)
-      (goal-drive move-coords (goal-path-generator current-coords)))))
+      (goal-drive move-coords goal-distance max-distance))))
 
-(define (score-moves current-coords moves-list enemies goal-path-generator)
+(define (score-moves current-coords moves-list enemies goal-distance-generator)
+  (let ((goal-distances (goal-distances-for-coords moves-list goal-distance-generator)))
+    (map
+      (lambda (move-coords)
+        (cons
+          (score-move
+            current-coords
+            move-coords
+            enemies
+            (cdr (assoc move-coords goal-distances))
+            (cdr (list-max cdr goal-distances)))
+          move-coords))
+      moves-list)))
+
+(define (goal-distances-for-coords coords-list goal-distance-generator)
   (map
-    (lambda (move-coords)
-      (cons
-        (score-move current-coords move-coords enemies goal-path-generator)
-        move-coords))
-    moves-list))
+    (lambda (coords)
+      (cons coords (goal-distance-generator coords)))
+    coords-list))
 
 (define (kill enemies old-coords new-coords)
   (reject

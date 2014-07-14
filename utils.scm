@@ -25,12 +25,15 @@
 (define (list-sample x)
   (list-ref x (random (length x))))
 
-(define (list-min f lst)
+(define (list-min f lst) (list-min-max < f lst))
+(define (list-max f lst) (list-min-max > f lst))
+
+(define (list-min-max sign f lst)
   (if (null? lst)
     '()
     (fold-left
       (lambda (acc e)
-        (if (< (f e) (f acc)) e acc))
+        (if (sign (f e) (f acc)) e acc))
       (car lst)
       (cdr lst))))
 

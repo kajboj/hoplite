@@ -105,20 +105,23 @@
        (possible-moves
          (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
 
-       (goal-path-generator
+       (neighbours-generator
+         (lambda (coords)
+           (legal-moves coords (map get-coords (get-other-pieces world)))))
+
+       (goal-distance-generator
          (lambda (start)
-           (path
+           (distance
              start
              (get-coords (get-hole world))
-             (lambda (coords)
-               (legal-moves coords (map get-coords (get-other-pieces world)))))))
+             neighbours-generator)))
        
        (move (list-sample
                (best-moves
                   hoplite-coords
                   possible-moves
                   (get-enemies world)
-                  goal-path-generator)))
+                  goal-distance-generator)))
        (move-ascii-coords (hex-to-ascii move)))
   
   (begin
@@ -133,6 +136,7 @@
     (displayn (ascii-coords-to-proportions move-ascii-coords))
     
     ))
+
 
 ; (let ((hex-coords-and-colors-list
 ;         (reject-empty-tiles (hex-coords-and-colors screen))))
