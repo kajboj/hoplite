@@ -6,30 +6,30 @@
     0
     enemies))
 
-(define (best-moves current-coords coords-list enemies goal-path)
+(define (best-moves current-coords coords-list enemies goal-path-generator)
   (map cdr
     (all-min
       (lambda (scored-move) (car scored-move))
-      (score-moves current-coords coords-list enemies goal-path))))
+      (score-moves current-coords coords-list enemies goal-path-generator))))
 
 (define (kill-count enemies enemies-after-move)
   (if (= (length enemies) (length enemies-after-move)) 0 -0.1))
 
-(define (exit-drive new-coords goal-path)
+(define (goal-drive new-coords goal-path)
   (if (coverage-check goal-path new-coords) -0.2 0))
 
-(define (score-move current-coords move-coords enemies goal-path)
+(define (score-move current-coords move-coords enemies goal-path-generator)
   (let ((enemies-after-move (kill enemies current-coords move-coords)))
     (+
       (attack-count move-coords enemies-after-move)
       (kill-count enemies enemies-after-move)
-      (exit-drive move-coords goal-path))))
+      (goal-drive move-coords (goal-path-generator current-coords)))))
 
-(define (score-moves current-coords moves-list enemies goal-path)
+(define (score-moves current-coords moves-list enemies goal-path-generator)
   (map
     (lambda (move-coords)
       (cons
-        (score-move current-coords move-coords enemies goal-path)
+        (score-move current-coords move-coords enemies goal-path-generator)
         move-coords))
     moves-list))
 

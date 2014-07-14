@@ -105,19 +105,20 @@
        (possible-moves
          (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
 
-       (goal-path
-         (path
-           (get-coords (get-hoplite world))
-           (get-coords (get-hole world))
-           (lambda (coords)
-             (legal-moves coords (map get-coords (get-other-pieces world))))))
-
+       (goal-path-generator
+         (lambda (start)
+           (path
+             start
+             (get-coords (get-hole world))
+             (lambda (coords)
+               (legal-moves coords (map get-coords (get-other-pieces world)))))))
+       
        (move (list-sample
                (best-moves
                   hoplite-coords
                   possible-moves
                   (get-enemies world)
-                  goal-path)))
+                  goal-path-generator)))
        (move-ascii-coords (hex-to-ascii move)))
   
   (begin
@@ -127,7 +128,7 @@
         move
         (render-world 
           world
-          (render-symbols " ` " goal-path empty-board))))
+          empty-board)))
     (displayn move)
     (displayn (ascii-coords-to-proportions move-ascii-coords))
     
