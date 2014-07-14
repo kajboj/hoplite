@@ -128,11 +128,11 @@
 
 (define other-pieces-defs (list
   lava-def
-  portal-def
-  altar-def))
+  portal-def))
 
 (define piece-defs (append
                      (list hoplite-def)
                      enemy-defs
                      other-pieces-defs
-                     (list hole-def)))
+                     (list hole-def)
+                     (list altar-def)))
