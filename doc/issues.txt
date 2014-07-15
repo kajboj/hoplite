@@ -1,7 +1,6 @@
-Bomb is detected for each demolitionist, that causes hoplite to not attack
-demolitionists.
-
-Hoplite is not recognized after picking magic robe on level 16.
-
 Sometimes footman demon is right on the ladder tile and then path finding
-algorithm blows up.
+algorithm blows up. Ladder should be fixed and not detected.
+
+Something is not right in goal detection and altar piece.
+
+Altar disspaears from the game at level 16, handle it.

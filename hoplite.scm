@@ -10,8 +10,10 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define (game-world hoplite enemies other-pieces hole altar)
-  (list hoplite enemies other-pieces hole altar))
+(define (game-world hoplite enemies other-pieces altar)
+  (list hoplite enemies other-pieces
+        ((get-creator hole-def) '(1 0))
+        altar))
 
 (define (get-hoplite world) (car world))
 (define (get-enemies world) (cadr world))
@@ -102,7 +104,6 @@
 (define (ascii-to-hex hex-coords)
   (cadr (assoc hex-coords ascii-to-hex-map)))
 
-
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
        (hoplite-coords (get-coords (get-hoplite world)))
        (non-visitable-coords (map get-coords (get-non-visitable-pieces world)))
@@ -132,7 +133,8 @@
       (render-symbol
         " . "
         move
-        (render-world world empty-board)))
+        (render-world world empty-board))
+      )
 
     (displayn move)
     (displayn (ascii-coords-to-proportions move-ascii-coords))
