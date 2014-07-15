@@ -1,11 +1,14 @@
-(load "boards.scm")
-(load "pieces.scm")
-(load "utils.scm")
-(load "display.scm")
-(load "parse.scm")
-(load "screen.scm")
-(load "ai.scm")
-(load "path.scm")
+(load (map
+        (lambda (filename) (string-append "lib/scheme/" filename))
+        '("boards.scm"
+          "pieces.scm"
+          "utils.scm"
+          "display.scm"
+          "parse.scm"
+          "screen.scm"
+          "ai.scm"
+          "path.scm")
+        ))
 
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
@@ -57,7 +60,7 @@
 
 (define (shifted-on-board coords shifts)
   (filter on-board?
-    (coords-list-add shifts coords))))
+    (coords-list-add shifts coords)))))
 
 (define (neighbours radius coords)
   (shifted-on-board coords (coord-shifts radius)))

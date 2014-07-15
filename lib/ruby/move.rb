@@ -15,9 +15,9 @@ runner(ENV['LOOP']) do
   puts 'getting image from android'
   `#{adb} shell screencap -p | perl -pe '#{regex}' > png/screen.png`
   puts 'processing image'
-  load 'png_reader.rb'
+  load 'lib/ruby/png_reader.rb'
   puts 'move calculation'
-  output = `scheme --silent < hoplite.scm`
+  output = `scheme --silent < lib/scheme/hoplite.scm`
   puts output
 
   col, row = ratio_to_pixels(*parse_move(output))
