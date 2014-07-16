@@ -1,12 +1,21 @@
 class Image
   PNG_DIR = 'png'
 
+  def self.from_android(filename)
+    # `#{ADB} shell screencap -p | perl -pe '#{regex}' > #{png_filepath(filename)}`
+    new(filename)
+  end
+
+  def self.png_filepath(filename)
+    File.join(PNG_DIR, filename)
+  end
+
   def initialize(filename)
     @filename = filename
   end
 
   def png_filepath(filename)
-    File.join(PNG_DIR, filename)
+    self.class.png_filepath(filename)
   end
 
   def small_filename(filename)
@@ -19,6 +28,10 @@ class Image
 
   def pixelated_filename(filename)
     "pixelated-#{filename}"
+  end
+
+  def prefixed_filename(prefix, filename)
+    "#{prefix}-#{filename}"
   end
 
   def resize(percent)
@@ -88,6 +101,34 @@ class Image
       end
     end
     avg
+  end
+
+  def char_dimensions_in_pixels(ascii_dimensions)
+    Dimensions.new(
+      width.to_f / ascii_dimensions.width,
+      height.to_f / ascii_dimensions.height
+    )
+  end
+
+  def ratio_to_pixels(col_ratio, row_ratio)
+    # screen_dimensions = Dimensions.new(1080, 1920)
+    screen_dimensions = Dimensions.new(inner.width, inner.height)
+    [
+      col_ratio * screen_dimensions.width,
+      row_ratio * screen_dimensions.height
+    ].map(&:to_i).tap do |(col, row)|
+      draw_dot(col, row, 'tapped')
+    end
+  end
+
+  def draw_dot(col, row, filename_prefix)
+    image = ChunkyPNG::Image.from_file(png_filepath(@filename))
+    [[0, 1], [1, 1], [1, 0], [0, 0]].each do |(a, b)|
+      image[col+a, row+b] = ChunkyPNG::Color.rgba(255, 0, 0, 255)
+    end
+    output_filename = prefixed_filename(filename_prefix, @filename)
+    image.save(png_filepath(output_filename))
+    Image.new(output_filename)
   end
 
   def width

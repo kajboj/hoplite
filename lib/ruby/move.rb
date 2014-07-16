@@ -1,5 +1,14 @@
-adb = "/home/kajboj/code/adt/adt-bundle-linux-x86-20131030/sdk/platform-tools/adb"
-regex = 's/\x0D\x0A/\x0A/g'
+require 'chunky_png'
+require_relative 'dimensions'
+require_relative 'average_color'
+require_relative 'ascii_board'
+require_relative 'image'
+require_relative 'png_reader'
+
+ADB = "/home/kajboj/code/adt/adt-bundle-linux-x86-20131030/sdk/platform-tools/adb"
+REGEX = 's/\x0D\x0A/\x0A/g'
+CROP = {top: 18, bottom: -101}
+TAP_CORRECTION = {row: -0.05}
 
 def runner(repeat)
   if repeat
@@ -11,20 +20,52 @@ def runner(repeat)
   end
 end
 
+def parse_move(output)
+  col_s, row_s = output.split("\n").last[1..-2].split
+  [col_s, row_s].map do |ratio_s|
+    a = ratio_s.split("/").compact.map(&:to_f)
+    a[1] ? a[0]/a[1] : a[0]
+  end
+end
+
+def uncrop(col, row)
+  [col, row+CROP[:top]]
+end
+
+def unshrink(col, row)
+  [col*4, row*4]
+end
+
+def correct_tap(col, row)
+  [col, row+TAP_CORRECTION[:row]]
+end
+
 runner(ENV['LOOP']) do
   puts 'getting image from android'
-  `#{adb} shell screencap -p | perl -pe '#{regex}' > png/screen.png`
+  # `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > png/screen.png`
+  image = Image.from_android('screen.png')
+
   puts 'processing image'
-  load 'lib/ruby/png_reader.rb'
+  image = Image.new('screen.png').resize(25)
+  ascii_board = AsciiBoard.new('lib/scheme/boards.scm')
+
+  cropped = image.crop(CROP[:top], image.height+CROP[:bottom])
+  ascii_dimensions = ascii_board.dimensions
+  pixel_dimensions = cropped.char_dimensions_in_pixels(ascii_dimensions)
+  cropped.pixelize(ascii_dimensions, pixel_dimensions, 'lib/scheme/screen.scm')
+
   puts 'move calculation'
   output = `scheme --silent < lib/scheme/hoplite.scm`
   puts output
-
-  col, row = ratio_to_pixels(*parse_move(output))
+  col, row = unshrink(
+    *uncrop(
+      *cropped.ratio_to_pixels(
+        *correct_tap(
+          *parse_move(output)))))
   puts col, row
 
   puts 'tapping'
-  `#{adb} shell input tap #{col} #{row}`
+  # `#{adb} shell input tap #{col} #{row}`
   sleep 0.7
 end
 
