@@ -38,12 +38,12 @@ class Screen
   end
 
   def to_scheme_special_skills
-    SPECIAL_SKILL_STATUS.each do |(name, coords)|  
-      # @image.draw_dot(*coords, name, 255, 0, 0)
-      rgb = @image.color(*coords)
+    File.open(SCHEME_SCREEN_PATH, 'a') do |f|
+      f.puts
+      SPECIAL_SKILL_STATUS.each do |(name, coords)|  
+        # @image.draw_dot(*coords, name, 255, 0, 0)
+        rgb = @image.color(*coords)
 
-      File.open(SCHEME_SCREEN_PATH, 'a') do |f|
-        f.puts
         f.puts
         f.puts("(define #{name}-color '(#{rgb.join(' ')}))")
       end 
