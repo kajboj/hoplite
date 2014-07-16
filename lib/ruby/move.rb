@@ -30,7 +30,8 @@ runner(ENV['LOOP']) do
   output = `scheme --silent < lib/scheme/hoplite.scm`
   puts output
 
-  screen.tap(*parse_move(output))
+  screen.tap_ratio(*parse_move(output))
+  screen.to_scheme_special_skills
 
   sleep 0.7
 end

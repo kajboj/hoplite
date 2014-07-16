@@ -116,18 +116,26 @@ class Image
       col_ratio * screen_dimensions.width,
       row_ratio * screen_dimensions.height
     ].map(&:to_i).tap do |(col, row)|
-      draw_dot(col, row, 'tapped')
+      # draw_dot(col, row, 'tapped')
     end
   end
 
-  def draw_dot(col, row, filename_prefix)
+  def draw_dot(col, row, filename_prefix, r=255, g=0, b=0)
     image = ChunkyPNG::Image.from_file(png_filepath(@filename))
     [[0, 1], [1, 1], [1, 0], [0, 0]].each do |(a, b)|
-      image[col+a, row+b] = ChunkyPNG::Color.rgba(255, 0, 0, 255)
+      image[col+a, row+b] = ChunkyPNG::Color.rgba(r, g, b, 255)
     end
     output_filename = prefixed_filename(filename_prefix, @filename)
     image.save(png_filepath(output_filename))
     Image.new(output_filename)
+  end
+
+  def color(col, row)
+    i = @inner[col, row]
+    r = ChunkyPNG::Color.r(i)
+    g = ChunkyPNG::Color.g(i)
+    b = ChunkyPNG::Color.b(i)
+    [r, g, b]
   end
 
   def width

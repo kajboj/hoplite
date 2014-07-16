@@ -6,6 +6,11 @@ class Screen
   REGEX = 's/\x0D\x0A/\x0A/g'
   CROP = {top: 18, bottom: -101}
   TAP_CORRECTION = {row: -0.05}
+  SPECIAL_SKILL_STATUS = {
+    'leap' => [135, 423],
+    'spear' => [225, 423],
+    'bash' => [45, 423]
+  }
 
   def self.from_android
     image_filepath = Image.png_filepath(IMAGE_FILENAME)
@@ -32,7 +37,20 @@ class Screen
       SCHEME_SCREEN_PATH)
   end
 
-  def tap(ratio_col, ratio_row)
+  def to_scheme_special_skills
+    SPECIAL_SKILL_STATUS.each do |(name, coords)|  
+      # @image.draw_dot(*coords, name, 255, 0, 0)
+      rgb = @image.color(*coords)
+
+      File.open(SCHEME_SCREEN_PATH, 'a') do |f|
+        f.puts
+        f.puts
+        f.puts("(define #{name}-color '(#{rgb.join(' ')}))")
+      end 
+    end
+  end
+
+  def tap_ratio(ratio_col, ratio_row)
     col, row = unshrink(
       *uncrop(
         *@cropped.ratio_to_pixels(
