@@ -2,7 +2,6 @@ class Image
   PNG_DIR = 'png'
 
   def self.from_android(filename)
-    # `#{ADB} shell screencap -p | perl -pe '#{regex}' > #{png_filepath(filename)}`
     new(filename)
   end
 
