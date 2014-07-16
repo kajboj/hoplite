@@ -53,3 +53,11 @@
 (define select list-transform-positive)
 
 (define (any? lst) (not (null? lst)))
+
+(define (list-string-join f join-string lst)
+  (if (null? lst)
+    ""
+    (fold-left
+      (lambda (acc x) (string-append acc join-string (f x)))
+      (f (car lst))
+      (cdr lst))))

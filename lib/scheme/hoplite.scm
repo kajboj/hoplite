@@ -24,6 +24,9 @@
 (define (get-hole world) (cadddr world))
 (define (get-altar world) (cadr (cdddr world)))
 
+(define (by-one coords) (cons coords "by-one"))
+(define (leap coords) (cons coords "leap"))
+
 (define (get-non-visitable-pieces world)
   (append
     (get-other-pieces world)
@@ -129,7 +132,7 @@
                   possible-moves
                   (get-enemies world)
                   goal-distance-generator)))
-       (move-ascii-coords (hex-to-ascii move)))
+       )
   
   (begin
     (displayn 
@@ -140,8 +143,7 @@
       )
 
     (displayn move)
-    (displayn (ascii-coords-to-proportions move-ascii-coords))
-    
+    (displayn (render-move (by-one move)))
     ))
 
 
