@@ -4,6 +4,10 @@ require_relative 'average_color'
 require_relative 'ascii_board'
 require_relative 'image'
 require_relative 'screen'
+require_relative 'hoplite_move'
+require_relative 'by_one'
+require_relative 'leap'
+require_relative 'parser'
 
 def runner(repeat)
   if repeat
@@ -15,23 +19,18 @@ def runner(repeat)
   end
 end
 
-def parse_move(output)
-  col_s, row_s = output.split("\n").last[1..-2].split
-  [col_s, row_s].map do |ratio_s|
-    a = ratio_s.split("/").compact.map(&:to_f)
-    a[1] ? a[0]/a[1] : a[0]
-  end
-end
+HopliteError = Class.new(Exception)
 
 runner(ENV['LOOP']) do
   screen = Screen.from_android
   screen.to_scheme_rgb
+  screen.to_scheme_special_skills
 
   output = `scheme --silent < lib/scheme/hoplite.scm`
   puts output
 
-  screen.tap_ratio(*parse_move(output))
-  screen.to_scheme_special_skills
+  move = Parser.parse_move(output)
+  move.execute(screen)
 
   sleep 0.7
 end

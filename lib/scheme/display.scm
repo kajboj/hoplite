@@ -65,6 +65,6 @@
   (string-append
     "success: "
     (cdr move)
-    " - "
+    ", "
     (list-string-join number->string " "
                       (ascii-coords-to-proportions (hex-to-ascii (car move))))))

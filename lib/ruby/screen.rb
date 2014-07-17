@@ -6,7 +6,7 @@ class Screen
   REGEX = 's/\x0D\x0A/\x0A/g'
   CROP = {top: 18, bottom: -101}
   TAP_CORRECTION = {row: -0.05}
-  SPECIAL_SKILL_STATUS = {
+  SPECIAL_SKILL = {
     'leap' => [135, 423],
     'spear' => [225, 423],
     'bash' => [45, 423]
@@ -14,7 +14,7 @@ class Screen
 
   def self.from_android
     image_filepath = Image.png_filepath(IMAGE_FILENAME)
-    `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > #{image_filepath}`
+    # `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > #{image_filepath}`
 
     image = Image.from_android(IMAGE_FILENAME)
     new(image)
@@ -40,7 +40,7 @@ class Screen
   def to_scheme_special_skills
     File.open(SCHEME_SCREEN_PATH, 'a') do |f|
       f.puts
-      SPECIAL_SKILL_STATUS.each do |(name, coords)|  
+      SPECIAL_SKILL.each do |(name, coords)|  
         # @image.draw_dot(*coords, name, 255, 0, 0)
         rgb = @image.color(*coords)
 
@@ -55,9 +55,17 @@ class Screen
       *uncrop(
         *@cropped.ratio_to_pixels(
           *correct_tap(ratio_col, ratio_row))))
-    puts col, row
 
-    `#{ADB} shell input tap #{col} #{row}`
+    tap(col, row)
+  end
+
+  def special_skill(skill_type)
+    tap(*SPECIAL_SKILL[skill_type])
+  end
+
+  def tap(col, row)
+    puts "tapping (#{[col, row].join(', ')})"
+    # `#{ADB} shell input tap #{col} #{row}`
   end
 
   def uncrop(col, row)
