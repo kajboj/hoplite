@@ -55,7 +55,7 @@
   (single-color-recognizer '(152 116 80))
   (lambda (coords)
     (enemy (car footman-def) coords
-      (neighbours 1 coords)))))
+      (neighbours coords)))))
 
 (define archer-def (list
   " A "
@@ -82,7 +82,7 @@
   (two-pixel-recognizer '((172 83 83) (87 73 73)))
   (lambda (coords)
     (enemy (car bomb-def) coords
-      (neighbours 1 coords)))))
+      (neighbours coords)))))
 
 (define wizard-def (list
   " W "

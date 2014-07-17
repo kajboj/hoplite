@@ -17,7 +17,7 @@
       (let ((path-elem 
               (list-search-positive
                 (car fringes)
-                (lambda (coords) (coverage-check (neighbours 1 (car path)) coords)))
+                (lambda (coords) (coverage-check (neighbours (car path)) coords)))
               ))
         (build-path (cons path-elem path) (cdr fringes)))))
 

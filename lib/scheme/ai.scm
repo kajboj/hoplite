@@ -66,8 +66,8 @@
 
 (define (stab enemy-coords old-coords new-coords)
   (and
-    (is-neighbour? 1 enemy-coords old-coords)
-    (is-neighbour? 1 enemy-coords new-coords)))
+    (is-neighbour? enemy-coords old-coords)
+    (is-neighbour? enemy-coords new-coords)))
 
 (define (lunge enemy-coords old-coords new-coords)
   (or

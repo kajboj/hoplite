@@ -68,11 +68,11 @@
   (filter on-board?
     (coords-list-add shifts coords)))))
 
-(define (neighbours radius coords)
-  (shifted-on-board coords (coord-shifts radius)))
+(define (neighbours coords)
+  (shifted-on-board coords coord-shifts))
 
-(define (is-neighbour? radius coords1 coords2)
-  (coverage-check (neighbours radius coords1) coords2))
+(define (is-neighbour? coords1 coords2)
+  (coverage-check (neighbours coords1) coords2))
 
 (define (coverage-check coords-list coords)
   (list-search-positive coords-list 
@@ -89,15 +89,10 @@
 (define (legal-moves coords non-visitable-coords)
   (filter
     (coverage-checker-negative non-visitable-coords)
-    (neighbours 1 coords)))
+    (neighbours coords)))
 
-(define (coord-shifts radius)
-  (filter
-    (lambda (c)
-      (and
-       (>= radius (abs (+ (get-x c) (get-y c))))
-       (not (and (= 0 (get-x c)) (= 0 (get-y c))))))
-    (pairs (- radius) radius (- radius) radius)))
+(define coord-shifts
+  '((-1  0) (1  0) (0 -1) (0  1) (1 -1) (-1  1)))
 
 (define hex-to-ascii-map
   (build-hex-to-ascii-map board-with-Xs))
@@ -119,7 +114,7 @@
        (possible-moves
          (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
 
-       (neighbours-generator
+       (nearest-neighbours-generator
          (lambda (coords)
            (legal-moves coords (map get-coords (get-other-pieces world)))))
 
@@ -127,7 +122,7 @@
 
        (goal-distance-generator
          (lambda (start)
-           (distance start goal neighbours-generator)))
+           (distance start goal nearest-neighbours-generator)))
        
        (move (list-sample
                (best-moves
@@ -148,6 +143,8 @@
     (displayn move)
     (displayn (render-move (by-one move)))
     ))
+
+  (displayn board-with-coords)
 
 ; (let ((hex-coords-and-colors-list
 ;         (reject-empty-tiles (hex-coords-and-colors screen))))
