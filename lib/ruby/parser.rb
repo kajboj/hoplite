@@ -1,6 +1,6 @@
 module Parser
   TYPE_MAP = {
-    'by-one' => Leap,
+    'by-one' => ByOne,
     'leap'   => Leap
   }
 
