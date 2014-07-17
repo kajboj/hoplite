@@ -71,6 +71,9 @@
 (define (neighbours coords)
   (shifted-on-board coords coord-shifts))
 
+(define (neighbours-2 coords)
+  (shifted-on-board coords coord-shifts-2))
+
 (define (is-neighbour? coords1 coords2)
   (coverage-check (neighbours coords1) coords2))
 
@@ -93,6 +96,10 @@
 
 (define coord-shifts
   '((-1  0) (1  0) (0 -1) (0  1) (1 -1) (-1  1)))
+
+(define coord-shifts-2
+  '((-2  0) (-2  1) (-2 2) (-1  2) (0 2) (1  1)
+    (2  0) (2  -1) (2 -2) (1  -2) (0 -2) (-1  -1)))
 
 (define hex-to-ascii-map
   (build-hex-to-ascii-map board-with-Xs))
@@ -145,6 +152,11 @@
     ))
 
   (displayn board-with-coords)
+  (displayn 
+    (render-symbols
+      " . "
+      (neighbours-2 '(5 0))
+      empty-board))
 
 ; (let ((hex-coords-and-colors-list
 ;         (reject-empty-tiles (hex-coords-and-colors screen))))
