@@ -70,5 +70,8 @@
     (is-neighbour? 1 enemy-coords new-coords)))
 
 (define (lunge enemy-coords old-coords new-coords)
-  (coords=? enemy-coords
-    (coords-add new-coords (coords-sub new-coords old-coords))))
+  (or
+    (coords=? enemy-coords
+              (coords-add new-coords (coords-sub new-coords old-coords))))
+    (coords=? enemy-coords
+              (coords-add new-coords (coords-div (coords-sub new-coords old-coords) 2))))

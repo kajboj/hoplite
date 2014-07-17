@@ -56,6 +56,9 @@
 (define (coords-sub coords1 coords2)
   (map - coords1 coords2))
 
+(define (coords-div coords n)
+  (map / coords (list n n)))
+
 (define (coords-list-add coords-list coords)
   (map
     (lambda (x) (coords-add coords x))
@@ -145,7 +148,6 @@
     (displayn move)
     (displayn (render-move (by-one move)))
     ))
-
 
 ; (let ((hex-coords-and-colors-list
 ;         (reject-empty-tiles (hex-coords-and-colors screen))))
