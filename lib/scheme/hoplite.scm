@@ -7,7 +7,8 @@
           "parse.scm"
           "screen.scm"
           "ai.scm"
-          "path.scm")
+          "path.scm"
+          "moves.scm")
         ))
 
 (define (get-x coords) (car coords))
@@ -23,9 +24,6 @@
 (define (get-other-pieces world) (caddr world))
 (define (get-hole world) (cadddr world))
 (define (get-altar world) (cadr (cdddr world)))
-
-(define (by-one coords) (cons coords "by-one"))
-(define (leap coords) (cons coords "leap"))
 
 (define (get-non-visitable-pieces world)
   (append
@@ -89,7 +87,7 @@
   (let ((positive (coverage-checker-positive coords-list)))
     (lambda (coords) (not (positive coords)))))
 
-(define (legal-moves coords non-visitable-coords)
+(define (visitable-neighbours coords non-visitable-coords)
   (filter
     (coverage-checker-negative non-visitable-coords)
     (neighbours coords)))
@@ -123,7 +121,7 @@
 
        (nearest-neighbours-generator
          (lambda (coords)
-           (legal-moves coords (map get-coords (get-other-pieces world)))))
+           (visitable-neighbours coords (map get-coords (get-other-pieces world)))))
 
        (goal (establish-goal world))
 
@@ -148,15 +146,19 @@
       )
 
     (displayn move)
-    (displayn (render-move (by-one move)))
+    (displayn (render-move (make-by-one move)))
     ))
 
-  (displayn board-with-coords)
-  (displayn 
-    (render-symbols
-      " . "
-      (neighbours-2 '(5 0))
-      empty-board))
+; (define m (make-move '(1 2) "hello"))
+; (displayn m)
+; (displayn (map move-coords (list m)))
+
+  ; (displayn board-with-coords)
+  ; (displayn 
+  ;   (render-symbols
+  ;     " . "
+  ;     (neighbours-2 '(5 0))
+  ;     empty-board))
 
 ; (let ((hex-coords-and-colors-list
 ;         (reject-empty-tiles (hex-coords-and-colors screen))))

@@ -12,11 +12,14 @@
     0
     enemies))
 
-(define (best-moves current-coords coords-list enemies goal-distance-generator)
+(define (best-moves current-coords moves enemies goal-distance-generator)
   (map cdr
     (all-min
       (lambda (scored-move) (car scored-move))
-      (score-moves current-coords coords-list enemies goal-distance-generator))))
+      (score-moves current-coords
+                   (map move-coords (moves-by-one moves))
+                   enemies
+                   goal-distance-generator))))
 
 (define (kill-count enemies enemies-after-move)
   (* -0.2 (- (length enemies) (length enemies-after-move))))

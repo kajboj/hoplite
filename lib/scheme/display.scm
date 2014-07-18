@@ -64,7 +64,7 @@
 (define (render-move move)
   (string-append
     "success: "
-    (cdr move)
+    (move-type move)
     ", "
     (list-string-join number->string " "
-                      (ascii-coords-to-proportions (hex-to-ascii (car move))))))
+                      (ascii-coords-to-proportions (hex-to-ascii (move-coords move))))))
