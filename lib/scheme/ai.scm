@@ -17,16 +17,18 @@
                                     (score-moves current-coords
                                                  (moves-by-one moves)
                                                  enemies
-                                                 goal-distance-generator))))
+                                                 goal-distance-generator)))
+        (best-leap-moves (all-min car
+                                  (score-moves current-coords
+                                               (moves-leap moves)
+                                               enemies
+                                               goal-distance-generator))))
     (map cdr
-         (if (and (> (caar best-by-one-moves) 0)
-                  (any? (moves-leap moves)))
-             (all-min car
-                      (score-moves current-coords
-                                   (moves-leap moves)
-                                   enemies
-                                   goal-distance-generator))
-             best-by-one-moves))))
+         (cond ((and (> (caar best-by-one-moves) 0) (any? (moves-leap moves)))
+                best-leap-moves)
+               ((and (< (length enemies) 4) (any? (moves-leap moves)))
+                best-leap-moves)
+               (else best-by-one-moves)))))
 
 (define (kill-count enemies enemies-after-move)
   (* -0.2 (- (length enemies) (length enemies-after-move))))
