@@ -17,7 +17,7 @@
     (all-min
       (lambda (scored-move) (car scored-move))
       (score-moves current-coords
-                   (map move-coords (moves-by-one moves))
+                   (moves-by-one moves)
                    enemies
                    goal-distance-generator))))
 
@@ -34,25 +34,25 @@
       (kill-count enemies enemies-after-move)
       (goal-drive move-coords goal-distance max-distance))))
 
-(define (score-moves current-coords moves-list enemies goal-distance-generator)
-  (let ((goal-distances (goal-distances-for-coords moves-list goal-distance-generator)))
+(define (score-moves current-coords moves enemies goal-distance-generator)
+  (let ((goal-distances (goal-distances-for-moves moves goal-distance-generator)))
     (map
-      (lambda (move-coords)
+      (lambda (move)
         (cons
           (score-move
             current-coords
-            move-coords
+            (move-coords move)
             enemies
-            (cdr (assoc move-coords goal-distances))
+            (cdr (assoc move goal-distances))
             (cdr (list-max cdr goal-distances)))
-          move-coords))
-      moves-list)))
+          move))
+      moves)))
 
-(define (goal-distances-for-coords coords-list goal-distance-generator)
+(define (goal-distances-for-moves moves goal-distance-generator)
   (map
-    (lambda (coords)
-      (cons coords (goal-distance-generator coords)))
-    coords-list))
+    (lambda (move)
+      (cons move (goal-distance-generator (move-coords move))))
+    moves))
 
 (define (kill enemies old-coords new-coords)
   (reject

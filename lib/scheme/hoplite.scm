@@ -141,12 +141,12 @@
     (displayn 
       (render-symbol
         " . "
-        move
+        (move-coords move)
         (render-world world empty-board))
       )
 
-    (displayn move)
-    (displayn (render-move (make-by-one move)))
+    (displayn (move-coords move))
+    (displayn (render-move move))
     ))
 
 ; (define m (make-move '(1 2) "hello"))
