@@ -9,6 +9,8 @@ require_relative 'by_one'
 require_relative 'leap'
 require_relative 'parser'
 
+DEBUG = ENV['DEBUG']
+
 def runner(repeat)
   if repeat
     while true do

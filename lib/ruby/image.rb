@@ -9,8 +9,9 @@ class Image
     File.join(PNG_DIR, filename)
   end
 
-  def initialize(filename)
+  def initialize(filename, inner = nil)
     @filename = filename
+    @inner = inner
   end
 
   def png_filepath(filename)
@@ -36,7 +37,6 @@ class Image
   def resize(percent)
     small_file = small_filename(@filename)
     cmd = "convert -resize #{percent}% #{png_filepath(@filename)} #{png_filepath(small_file)}"
-    puts cmd
     `#{cmd}`
     Image.new(small_file)
   end
@@ -50,8 +50,8 @@ class Image
       end
     end
 
-    png.save(png_filepath(cropped_filename(@filename)))
-    Image.new(cropped_filename(@filename))
+    png.save(png_filepath(cropped_filename(@filename))) if DEBUG
+    Image.new(cropped_filename(@filename), png)
   end
 
   def pixelize(ascii_board_dimensions, pixel_dimensions, scheme_filepath)
@@ -75,8 +75,8 @@ class Image
       f.write("))")
     end
 
-    png.save(png_filepath(pixelated_filename(@filename)))
-    Image.new(pixelated_filename(@filename))
+    png.save(png_filepath(pixelated_filename(@filename))) if DEBUG
+    Image.new(pixelated_filename(@filename), png)
   end
 
   def each_pixel_of_ascii_tile(ascii_col, ascii_row, pixel_dimensions)
@@ -128,8 +128,9 @@ class Image
       image[col+a, row+b] = ChunkyPNG::Color.rgba(r, g, b, 255)
     end
     output_filename = prefixed_filename(filename_prefix, @filename)
-    image.save(png_filepath(output_filename))
-    Image.new(output_filename)
+
+    image.save(png_filepath(output_filename)) if DEBUG
+    Image.new(output_filename, image)
   end
 
   def color(col, row)
