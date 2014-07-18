@@ -13,13 +13,20 @@
     enemies))
 
 (define (best-moves current-coords moves enemies goal-distance-generator)
-  (map cdr
-    (all-min
-      (lambda (scored-move) (car scored-move))
-      (score-moves current-coords
-                   (append (moves-by-one moves) (moves-leap moves))
-                   enemies
-                   goal-distance-generator))))
+  (let ((best-by-one-moves (all-min car
+                                    (score-moves current-coords
+                                                 (moves-by-one moves)
+                                                 enemies
+                                                 goal-distance-generator))))
+    (map cdr
+         (if (and (> (caar best-by-one-moves) 0)
+                  (any? (moves-leap moves)))
+             (all-min car
+                      (score-moves current-coords
+                                   (moves-leap moves)
+                                   enemies
+                                   goal-distance-generator))
+             best-by-one-moves))))
 
 (define (kill-count enemies enemies-after-move)
   (* -0.2 (- (length enemies) (length enemies-after-move))))

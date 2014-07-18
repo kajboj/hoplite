@@ -148,7 +148,6 @@
         (render-world world empty-board))
       )
 
-    (displayn can-leap?)
     (displayn (move-coords move))
     (displayn (render-move move))
     ))
