@@ -87,10 +87,10 @@
   (let ((positive (coverage-checker-positive coords-list)))
     (lambda (coords) (not (positive coords)))))
 
-(define (visitable-neighbours coords non-visitable-coords)
+(define (visitable-neighbours neighbours-f coords non-visitable-coords)
   (filter
     (coverage-checker-negative non-visitable-coords)
-    (neighbours coords)))
+    (neighbours-f coords)))
 
 (define coord-shifts
   '((-1  0) (1  0) (0 -1) (0  1) (1 -1) (-1  1)))
@@ -116,12 +116,15 @@
 (let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
        (hoplite-coords (get-coords (get-hoplite world)))
        (non-visitable-coords (map get-coords (get-non-visitable-pieces world)))
+
        (possible-moves
-         (legal-moves (get-coords (get-hoplite world)) non-visitable-coords))
+         (legal-moves (get-coords (get-hoplite world))
+                      non-visitable-coords
+                      can-leap?))
 
        (nearest-neighbours-generator
          (lambda (coords)
-           (visitable-neighbours coords (map get-coords (get-other-pieces world)))))
+           (visitable-neighbours neighbours coords (map get-coords (get-other-pieces world)))))
 
        (goal (establish-goal world))
 
@@ -145,6 +148,7 @@
         (render-world world empty-board))
       )
 
+    (displayn can-leap?)
     (displayn (move-coords move))
     (displayn (render-move move))
     ))

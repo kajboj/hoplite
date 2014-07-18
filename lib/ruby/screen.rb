@@ -14,7 +14,7 @@ class Screen
 
   def self.from_android
     image_filepath = Image.png_filepath(IMAGE_FILENAME)
-    # `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > #{image_filepath}`
+    `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > #{image_filepath}`
 
     image = Image.from_android(IMAGE_FILENAME)
     new(image)
@@ -60,12 +60,14 @@ class Screen
   end
 
   def special_skill(skill_type)
-    tap(*SPECIAL_SKILL[skill_type])
+    tap(
+      *unshrink(
+        *SPECIAL_SKILL[skill_type]))
   end
 
   def tap(col, row)
     puts "tapping (#{[col, row].join(', ')})"
-    # `#{ADB} shell input tap #{col} #{row}`
+    `#{ADB} shell input tap #{col} #{row}`
   end
 
   def uncrop(col, row)

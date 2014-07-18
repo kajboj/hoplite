@@ -17,7 +17,7 @@
     (all-min
       (lambda (scored-move) (car scored-move))
       (score-moves current-coords
-                   (moves-by-one moves)
+                   (append (moves-by-one moves) (moves-leap moves))
                    enemies
                    goal-distance-generator))))
 
