@@ -24,7 +24,6 @@
                                                enemies
                                                goal-distance-generator)))
         )
-    ; (map cdr best-by-one-moves)))
     (map cdr 
          (if (any-leaps? moves)
              (if (all-by-one-bad? best-by-one-moves)

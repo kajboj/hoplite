@@ -141,23 +141,3 @@
     (displayn (move-coords move))
     (displayn (render-move move))))
   ))
-; (define m (make-move '(1 2) "hello"))
-; (displayn m)
-; (displayn (map move-coords (list m)))
-
-  ; (displayn board-with-coords)
-  ; (displayn 
-  ;   (render-symbols
-  ;     " . "
-  ;     (neighbours-2 '(5 0))
-  ;     empty-board))
-
-; (let ((hex-coords-and-colors-list
-;         (reject-empty-tiles (hex-coords-and-colors screen))))
-;   (displayn board-with-coords)
-;   (displayn hex-coords-and-colors-list)
-;   )
-
-; (displayn 
-;   ((two-pixel-recognizer '((0 0 0) (100 100 100)))
-;    '((-10 0 0) (100 100 100))))
