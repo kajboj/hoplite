@@ -8,7 +8,8 @@
           "screen.scm"
           "ai.scm"
           "path.scm"
-          "moves.scm")
+          "moves.scm"
+          "debug.scm")
         ))
 
 (define (get-x coords) (car coords))

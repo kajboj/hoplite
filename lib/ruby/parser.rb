@@ -8,7 +8,7 @@ module Parser
     last_line = output.split("\n").last
 
     unless last_line =~ /\Asuccess.*/
-      raise HopliteError.new('no success message from scheme')
+      raise HopliteParseError.new('no success message from scheme')
     else
       last_line =~ /success: (.*?), ([0-9\/]+) ([0-9\/]+)/
 

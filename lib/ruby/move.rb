@@ -14,18 +14,26 @@ DEBUG = ENV['DEBUG']
 def runner(repeat)
   if repeat
     while true do
-      yield
+      begin
+        yield
+      rescue HopliteParseError
+        yield
+      end
     end
   else
     yield
   end
 end
 
-HopliteError = Class.new(Exception)
+HopliteParseError = Class.new(Exception)
 
 runner(ENV['LOOP']) do
-  # screen = Screen.from_android
-  screen = Screen.from_file('screen.png')
+  screen = if (ENV['DEVICE'] == 'false')
+    screen = Screen.from_file('screen.png')
+  else
+    Screen.from_android
+  end
+
   screen.to_scheme_rgb
   screen.to_scheme_special_skills
 

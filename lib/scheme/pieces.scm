@@ -21,13 +21,13 @@
   (lambda (screen-colors)
     (color-within? 15 (car screen-colors) piece-color)))
 
-(define (multi-color-recognizer piece-color-list)
+(define (or-recognizer recognizers)
   (lambda (screen-colors)
     (fold-left
-      (lambda (acc piece-color)
-        (or acc (color-within? 15 (car screen-colors) piece-color)))
+      (lambda (acc recognizer)
+        (or acc (recognizer screen-colors)))
       #f
-      piece-color-list)))
+      recognizers)))
 
 (define (two-pixel-recognizer piece-color-list)
   (lambda (screen-colors)
@@ -47,12 +47,14 @@
 
 (define hoplite-def (list
   "!H!"
-  (multi-color-recognizer '((156 157 156) (136 107 78)))
+  (or-recognizer (map two-pixel-recognizer
+    '(((141 113 83) (129 119 81))
+      ((153 154 153) (112 113 87)))))
   (lambda (coords) (piece (car hoplite-def) coords))))
 
 (define footman-def (list
   " F "
-  (single-color-recognizer '(152 116 80))
+  (two-pixel-recognizer '((147 113 78) (101 87 73)))
   (lambda (coords)
     (enemy (car footman-def) coords
       (neighbours coords)))))
