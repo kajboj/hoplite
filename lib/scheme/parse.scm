@@ -86,8 +86,7 @@
       (game-world
         (car (parse-pieces hex-coords-and-colors-list (list hoplite-def)))
         (parse-pieces hex-coords-and-colors-list enemy-defs)
-        (parse-pieces hex-coords-and-colors-list other-pieces-defs)
-        (car (parse-pieces hex-coords-and-colors-list (list altar-def))))))
+        (parse-pieces hex-coords-and-colors-list other-pieces-defs))))
 
 (define (hex-coords ascii-coords-of-X)
   (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))

@@ -37,6 +37,7 @@ class Image
   def resize(percent)
     small_file = small_filename(@filename)
     cmd = "convert -resize #{percent}% #{png_filepath(@filename)} #{png_filepath(small_file)}"
+    puts cmd
     `#{cmd}`
     Image.new(small_file)
   end

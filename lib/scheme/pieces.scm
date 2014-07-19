@@ -128,11 +128,19 @@
 
 (define other-pieces-defs (list
   lava-def
-  portal-def))
+  portal-def
+  altar-def))
 
 (define piece-defs (append
                      (list hoplite-def)
                      enemy-defs
                      other-pieces-defs
-                     (list hole-def)
-                     (list altar-def)))
+                     (list hole-def)))
+
+(define (get-pieces world)
+  (append
+    (list (get-hoplite world))
+    (get-enemies world)
+    (get-other-pieces world)
+    (list (get-hole world))))
+

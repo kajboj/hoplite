@@ -37,11 +37,15 @@
       (car lst)
       (cdr lst))))
 
+; We evaluate f too many times here.
 (define (all-min f lst)
-  (let ((min (f (list-min f lst))))
-    (filter
-      (lambda (x) (= (f x) min))
-      lst)))
+  (let* ((min (list-min f lst)))
+    (if (null? min)
+        '() 
+        (let ((min-f-val (f min)))
+          (filter
+            (lambda (x) (= (f x) min-f-val))
+            lst)))))
 
 (define (function-or functions arguments)
   (fold-left

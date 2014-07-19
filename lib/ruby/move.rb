@@ -24,7 +24,8 @@ end
 HopliteError = Class.new(Exception)
 
 runner(ENV['LOOP']) do
-  screen = Screen.from_android
+  # screen = Screen.from_android
+  screen = Screen.from_file('screen.png')
   screen.to_scheme_rgb
   screen.to_scheme_special_skills
 

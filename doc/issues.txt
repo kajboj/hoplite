@@ -1,6 +1,7 @@
 Sometimes footman demon is right on the ladder tile and then path finding
 algorithm blows up. Ladder should be fixed and not detected.
 
-Something is not right in goal detection and altar piece.
+Something is not right in goal detection and altar piece. Fix it so it handles
+no alter well.
 
 Altar disspaears from the game at level 16, handle it.

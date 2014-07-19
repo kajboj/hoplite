@@ -15,8 +15,11 @@ class Screen
   def self.from_android
     image_filepath = Image.png_filepath(IMAGE_FILENAME)
     `#{ADB} shell screencap -p | perl -pe '#{REGEX}' > #{image_filepath}`
+    from_file(IMAGE_FILENAME)
+  end
 
-    image = Image.from_android(IMAGE_FILENAME)
+  def self.from_file(filename)
+    image = Image.from_android(filename)
     new(image)
   end
 

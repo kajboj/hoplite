@@ -22,13 +22,21 @@
                                   (score-moves current-coords
                                                (moves-leap moves)
                                                enemies
-                                               goal-distance-generator))))
-    (map cdr
-         (cond ((and (> (caar best-by-one-moves) 0) (any? (moves-leap moves)))
-                best-leap-moves)
-               ((and (< (length enemies) 4) (any? (moves-leap moves)))
-                best-leap-moves)
-               (else best-by-one-moves)))))
+                                               goal-distance-generator)))
+        )
+    ; (map cdr best-by-one-moves)))
+    (map cdr 
+         (if (any-leaps? moves)
+             (if (all-by-one-bad? best-by-one-moves)
+                 best-leap-moves
+                 (if (not-many-enemies? enemies)
+                     best-leap-moves
+                     best-by-one-moves))
+             best-by-one-moves))))
+
+(define (not-many-enemies? enemies) (< (length enemies) 4))
+(define (all-by-one-bad? moves) (> (caar best-by-one-moves) 0))
+(define (any-leaps? moves) (any? (moves-leap moves)))
 
 (define (kill-count enemies enemies-after-move)
   (* -0.2 (- (length enemies) (length enemies-after-move))))

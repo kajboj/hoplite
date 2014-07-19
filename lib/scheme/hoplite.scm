@@ -14,29 +14,19 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define (game-world hoplite enemies other-pieces altar)
+(define (game-world hoplite enemies other-pieces)
   (list hoplite enemies other-pieces
-        ((get-creator hole-def) '(1 0))
-        altar))
+        ((get-creator hole-def) '(1 0))))
 
 (define (get-hoplite world) (car world))
 (define (get-enemies world) (cadr world))
 (define (get-other-pieces world) (caddr world))
 (define (get-hole world) (cadddr world))
-(define (get-altar world) (cadr (cdddr world)))
 
 (define (get-non-visitable-pieces world)
   (append
     (get-other-pieces world)
     (get-enemies world)))
-
-(define (get-pieces world)
-  (append
-    (list (get-hoplite world))
-    (get-enemies world)
-    (get-other-pieces world)
-    (list (get-hole world))
-    (list (get-altar world))))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -149,9 +139,8 @@
       )
 
     (displayn (move-coords move))
-    (displayn (render-move move))
-    ))
-
+    (displayn (render-move move))))
+  ))
 ; (define m (make-move '(1 2) "hello"))
 ; (displayn m)
 ; (displayn (map move-coords (list m)))
