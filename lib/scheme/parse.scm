@@ -44,7 +44,8 @@
       (list
         (ascii-to-hex ascii-coords)
         (list (color screen ascii-coords)
-              (color screen (coords-add '(-1 0) ascii-coords)))))
+              (color screen (coords-add '(-1 0) ascii-coords))
+              (color screen (coords-add '(-1 -1) ascii-coords)))))
     (map car ascii-to-hex-map)))
 
 (define (number-within? tolerance x y)
@@ -87,7 +88,13 @@
         (car (parse-pieces hex-coords-and-colors-list (list hoplite-def)))
         (parse-pieces hex-coords-and-colors-list enemy-defs)
         (parse-pieces hex-coords-and-colors-list other-pieces-defs)
-        ((get-creator hole-def) '(1 0)))))
+        ((get-creator hole-def) '(1 0))
+        (parse-optional-piece hex-coords-and-colors-list altar-def)
+        (parse-optional-piece hex-coords-and-colors-list used-altar-def))))
+
+(define (parse-optional-piece hex-coords-and-colors-list piece-def)
+  (let ((pieces (parse-pieces hex-coords-and-colors-list (list piece-def))))
+    (if (null? pieces) '() (car pieces))))
 
 (define (hex-coords ascii-coords-of-X)
   (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))

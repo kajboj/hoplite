@@ -29,7 +29,7 @@
       #f
       recognizers)))
 
-(define (two-pixel-recognizer piece-color-list)
+(define (multi-pixel-recognizer piece-color-list)
   (lambda (screen-colors)
     (fold-left
       (lambda (acc pair-to-compare)
@@ -47,14 +47,14 @@
 
 (define hoplite-def (list
   "!H!"
-  (or-recognizer (map two-pixel-recognizer
+  (or-recognizer (map multi-pixel-recognizer
     '(((141 113 83) (120 119 81))
       ((153 154 153) (112 113 87)))))
   (lambda (coords) (piece (car hoplite-def) coords))))
 
 (define footman-def (list
   " F "
-  (two-pixel-recognizer '((147 113 78) (101 87 73)))
+  (multi-pixel-recognizer '((147 113 78) (101 87 73)))
   (lambda (coords)
     (enemy (car footman-def) coords
       (neighbours coords)))))
@@ -76,12 +76,12 @@
 
 (define demolitionist-def (list
   " D "
-  (two-pixel-recognizer '((158 83 84) (136 80 80)))
+  (multi-pixel-recognizer '((158 83 84) (136 80 80)))
   (lambda (coords) (enemy (car demolitionist-def) coords (list)))))
 
 (define bomb-def (list
   " b "
-  (two-pixel-recognizer '((172 83 83) (87 73 73)))
+  (multi-pixel-recognizer '((172 83 83) (87 73 73)))
   (lambda (coords)
     (enemy (car bomb-def) coords
       (neighbours coords)))))
@@ -117,9 +117,14 @@
   (lambda (coords) (piece (car portal-def) coords))))
 
 (define altar-def (list
-  "alt"
-  (single-color-recognizer '(193 194 193))
+  "ALT"
+  (multi-pixel-recognizer '((187 188 187) (121 121 121) (109 73 73)))
   (lambda (coords) (piece (car altar-def) coords))))
+
+(define used-altar-def (list
+  "alt"
+  (multi-pixel-recognizer '((187 188 187) (121 121 121) (69 69 69)))
+  (lambda (coords) (piece (car used-altar-def) coords))))
 
 (define enemy-defs (list
   footman-def
@@ -130,19 +135,22 @@
 
 (define other-pieces-defs (list
   lava-def
-  portal-def
-  altar-def))
+  portal-def))
 
 (define piece-defs (append
                      (list hoplite-def)
                      enemy-defs
                      other-pieces-defs
-                     (list hole-def)))
+                     (list hole-def)
+                     (list altar-def)
+                     (list used-altar-def)))
 
 (define (get-pieces world)
   (append
     (list (world-hoplite world))
     (world-enemies world)
     (world-other-pieces world)
-    (list (world-hole world))))
+    (list (world-hole world))
+    (listify (world-altar world))
+    (listify (world-used-altar world))))
 

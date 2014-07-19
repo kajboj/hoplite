@@ -65,3 +65,6 @@
       (lambda (acc x) (string-append acc join-string (f x)))
       (f (car lst))
       (cdr lst))))
+
+(define (listify x)
+  (if (null? x) '() (list x)))

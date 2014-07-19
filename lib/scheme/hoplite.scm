@@ -15,7 +15,9 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define-structure world hoplite enemies other-pieces hole)
+(define-structure world hoplite enemies other-pieces hole altar used-altar)
+
+(define (has-altar? world) (null? (world-altar world)))
 
 (define (get-non-visitable-pieces world)
   (append
@@ -134,7 +136,6 @@
        )
   
   (begin
-    ; (dump-colors)
     (displayn 
       (render-symbol
         " . "
