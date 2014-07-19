@@ -135,7 +135,8 @@
 
 (define other-pieces-defs (list
   lava-def
-  portal-def))
+  portal-def
+  used-altar-def))
 
 (define piece-defs (append
                      (list hoplite-def)
