@@ -34,7 +34,7 @@
              best-by-one-moves))))
 
 (define (not-many-enemies? enemies) (< (length enemies) 4))
-(define (all-by-one-bad? moves) (> (caar best-by-one-moves) 0))
+(define (all-by-one-bad? moves) (> (caar moves) 0))
 (define (any-leaps? moves) (any? (moves-leap moves)))
 
 (define (kill-count enemies enemies-after-move)

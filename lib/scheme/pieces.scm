@@ -74,7 +74,7 @@
 
 (define demolitionist-def (list
   " D "
-  (two-pixel-recognizer '((163 83 84) (136 80 80)))
+  (two-pixel-recognizer '((158 83 84) (136 80 80)))
   (lambda (coords) (enemy (car demolitionist-def) coords (list)))))
 
 (define bomb-def (list
