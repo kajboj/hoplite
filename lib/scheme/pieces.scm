@@ -141,8 +141,8 @@
 
 (define (get-pieces world)
   (append
-    (list (get-hoplite world))
-    (get-enemies world)
-    (get-other-pieces world)
-    (list (get-hole world))))
+    (list (world-hoplite world))
+    (world-enemies world)
+    (world-other-pieces world)
+    (list (world-hole world))))
 

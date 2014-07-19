@@ -15,19 +15,12 @@
 (define (get-x coords) (car coords))
 (define (get-y coords) (cadr coords))
 
-(define (game-world hoplite enemies other-pieces)
-  (list hoplite enemies other-pieces
-        ((get-creator hole-def) '(1 0))))
-
-(define (get-hoplite world) (car world))
-(define (get-enemies world) (cadr world))
-(define (get-other-pieces world) (caddr world))
-(define (get-hole world) (cadddr world))
+(define-structure world hoplite enemies other-pieces hole)
 
 (define (get-non-visitable-pieces world)
   (append
-    (get-other-pieces world)
-    (get-enemies world)))
+    (world-other-pieces world)
+    (world-enemies world)))
 
 (define (on-board? coords)
   (let ((x (get-x coords)) (y (get-y coords)))
@@ -106,13 +99,13 @@
 
 (let* (
        (world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
-       (hoplite-coords (get-coords (get-hoplite world)))
+       (hoplite-coords (get-coords (world-hoplite world)))
 
        (nearest-neighbours-generator
          (lambda (coords)
-           (visitable-neighbours neighbours coords (map get-coords (get-other-pieces world)))))
+           (visitable-neighbours neighbours coords (map get-coords (world-other-pieces world)))))
 
-       (hole-coords (get-coords (get-hole world)))
+       (hole-coords (get-coords (world-hole world)))
 
        (non-visitable-coords
            (map get-coords (get-non-visitable-pieces world)))
@@ -121,7 +114,7 @@
          (lambda (coords) (connected? coords hole-coords nearest-neighbours-generator)))
 
        (possible-moves
-         (legal-moves (get-coords (get-hoplite world))
+         (legal-moves (get-coords (world-hoplite world))
                       non-visitable-coords
                       can-leap?))
 
@@ -135,7 +128,7 @@
                (best-moves
                   hoplite-coords
                   possible-moves
-                  (get-enemies world)
+                  (world-enemies world)
                   goal-distance-generator
                   hole-connection-checker)))
        )

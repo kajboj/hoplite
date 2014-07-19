@@ -1,5 +1,5 @@
 (define (establish-goal world)
-  (let ((killable-enemies (select (get-enemies world) killable?)))
+  (let ((killable-enemies (select (world-enemies world) killable?)))
     (if (any? killable-enemies)
       (get-coords (car killable-enemies))
       (get-coords (car killable-enemies)))))

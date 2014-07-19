@@ -83,10 +83,11 @@
 (define (parse-world screen hoplite-def enemy-defs other-pieces-defs)
   (let ((hex-coords-and-colors-list
           (reject-empty-tiles (hex-coords-and-colors screen))))
-      (game-world
+      (make-world
         (car (parse-pieces hex-coords-and-colors-list (list hoplite-def)))
         (parse-pieces hex-coords-and-colors-list enemy-defs)
-        (parse-pieces hex-coords-and-colors-list other-pieces-defs))))
+        (parse-pieces hex-coords-and-colors-list other-pieces-defs)
+        ((get-creator hole-def) '(1 0)))))
 
 (define (hex-coords ascii-coords-of-X)
   (let ((ascii-coords-of-hex (coords-add ascii-coords-of-X '(-1 -1))))
