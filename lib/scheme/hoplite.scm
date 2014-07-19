@@ -141,6 +141,7 @@
        )
   
   (begin
+    ; (dump-colors)
     (displayn 
       (render-symbol
         " . "

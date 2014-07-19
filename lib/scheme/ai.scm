@@ -15,30 +15,36 @@
 (define (best-moves current-coords moves enemies
                     goal-distance-generator hole-connection-checker)
   (let* (
-         (best-by-one-moves
+         (best-moves-picker (lambda (moves)
            (all-min car
                     (score-moves current-coords
-                                 (moves-by-one moves)
+                                 moves
                                  enemies
-                                 goal-distance-generator)))
+                                 goal-distance-generator))))
+
+         (best-by-one-moves (best-moves-picker (moves-by-one moves)))
          
          (leap-moves-connected-to-hole
            (select (moves-leap moves)
              (lambda (leap) (hole-connection-checker (move-coords leap)))))
          
-         (best-leap-moves (all-min car
-                                   (score-moves current-coords
-                                                leap-moves-connected-to-hole
-                                                enemies
-                                                goal-distance-generator))))
+         (best-leap-moves (best-moves-picker leap-moves-connected-to-hole)))
     (map cdr 
          (if (any-leaps? moves)
              (if (all-by-one-bad? best-by-one-moves)
-                 best-leap-moves
+                 (best-of-all best-leap-moves best-by-one-moves)
                  (if (not-many-enemies? enemies)
-                     best-leap-moves
+                     (best-of-all best-leap-moves best-by-one-moves)
                      best-by-one-moves))
              best-by-one-moves))))
+
+(define (best-of-all leaps by-ones)
+  (if (leaps-better-than-by-ones? leaps by-ones)
+    leaps
+    by-ones))
+
+(define (leaps-better-than-by-ones? leaps by-ones)
+  (< (caar leaps) (caar by-ones)))
 
 (define (not-many-enemies? enemies) (< (length enemies) 4))
 (define (all-by-one-bad? moves) (or (null? moves) (> (caar moves) 0)))

@@ -48,7 +48,7 @@
 (define hoplite-def (list
   "!H!"
   (or-recognizer (map two-pixel-recognizer
-    '(((141 113 83) (129 119 81))
+    '(((141 113 83) (120 119 81))
       ((153 154 153) (112 113 87)))))
   (lambda (coords) (piece (car hoplite-def) coords))))
 
