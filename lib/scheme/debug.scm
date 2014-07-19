@@ -7,4 +7,5 @@
       (map (lambda (x) (list (car x) (cadr x)))
       (parse-pieces hex-coords-and-colors-list (list hoplite-def footman-def))
       ))
-    ))
+    )
+  )

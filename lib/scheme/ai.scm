@@ -12,18 +12,25 @@
     0
     enemies))
 
-(define (best-moves current-coords moves enemies goal-distance-generator)
-  (let ((best-by-one-moves (all-min car
-                                    (score-moves current-coords
-                                                 (moves-by-one moves)
-                                                 enemies
-                                                 goal-distance-generator)))
-        (best-leap-moves (all-min car
-                                  (score-moves current-coords
-                                               (moves-leap moves)
-                                               enemies
-                                               goal-distance-generator)))
-        )
+(define (best-moves current-coords moves enemies
+                    goal-distance-generator hole-connection-checker)
+  (let* (
+         (best-by-one-moves
+           (all-min car
+                    (score-moves current-coords
+                                 (moves-by-one moves)
+                                 enemies
+                                 goal-distance-generator)))
+         
+         (leap-moves-connected-to-hole
+           (select (moves-leap moves)
+             (lambda (leap) (hole-connection-checker (move-coords leap)))))
+         
+         (best-leap-moves (all-min car
+                                   (score-moves current-coords
+                                                leap-moves-connected-to-hole
+                                                enemies
+                                                goal-distance-generator))))
     (map cdr 
          (if (any-leaps? moves)
              (if (all-by-one-bad? best-by-one-moves)
@@ -34,7 +41,7 @@
              best-by-one-moves))))
 
 (define (not-many-enemies? enemies) (< (length enemies) 4))
-(define (all-by-one-bad? moves) (> (caar moves) 0))
+(define (all-by-one-bad? moves) (or (null? moves) (> (caar moves) 0)))
 (define (any-leaps? moves) (any? (moves-leap moves)))
 
 (define (kill-count enemies enemies-after-move)

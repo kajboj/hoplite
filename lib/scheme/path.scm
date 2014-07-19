@@ -1,5 +1,12 @@
+(define (connected? coords1 coords2 neighbour-generator)
+  (not (disconnected? coords1 coords2 neighbour-generator)))
+
+(define (disconnected? coords1 coords2 neighbour-generator)
+  (null? (path coords1 coords2 neighbour-generator)))
+
 (define (distance start finish neighbour-generator)
-  (length (path start finish neighbour-generator)))
+  (let ((path-len (length (path start finish neighbour-generator))))
+    (if (= path-len 0) 100 path-len)))
 
 (define (path start finish neighbour-generator)
   (let ((fringes (flood-fill
@@ -8,7 +15,9 @@
                    (list (list start))
                    100 0
                    neighbour-generator)))
-    (build-path (list finish) (cdr fringes))))
+    (if (null? fringes)
+      '()
+      (build-path (list finish) (cdr fringes)))))
     
 
 (define (build-path path fringes)

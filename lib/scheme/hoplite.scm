@@ -104,18 +104,26 @@
 (define (ascii-to-hex hex-coords)
   (cadr (assoc hex-coords ascii-to-hex-map)))
 
-(let* ((world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
+(let* (
+       (world (parse-world screen hoplite-def enemy-defs other-pieces-defs))
        (hoplite-coords (get-coords (get-hoplite world)))
-       (non-visitable-coords (map get-coords (get-non-visitable-pieces world)))
+
+       (nearest-neighbours-generator
+         (lambda (coords)
+           (visitable-neighbours neighbours coords (map get-coords (get-other-pieces world)))))
+
+       (hole-coords (get-coords (get-hole world)))
+
+       (non-visitable-coords
+           (map get-coords (get-non-visitable-pieces world)))
+
+       (hole-connection-checker
+         (lambda (coords) (connected? coords hole-coords nearest-neighbours-generator)))
 
        (possible-moves
          (legal-moves (get-coords (get-hoplite world))
                       non-visitable-coords
                       can-leap?))
-
-       (nearest-neighbours-generator
-         (lambda (coords)
-           (visitable-neighbours neighbours coords (map get-coords (get-other-pieces world)))))
 
        (goal (establish-goal world))
 
@@ -128,7 +136,8 @@
                   hoplite-coords
                   possible-moves
                   (get-enemies world)
-                  goal-distance-generator)))
+                  goal-distance-generator
+                  hole-connection-checker)))
        )
   
   (begin
